@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>UPin24 — Your Dream Website in 24 Hours</title>
+<meta name="description" content="Get a stunning, custom website built and delivered in under 24 hours. Personal care, guided handover, zero hosting costs.">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F7FB;--text:#111827;--cta:#FF5733;--accent:#00D4FF;--border:#E5E7EB;--success:#10B981;--card:#fff;--card-shadow:0 4px 24px rgba(0,0,0,0.06);--card-hover:0 12px 40px rgba(0,0,0,0.10)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;font-weight:700;line-height:1.2}
+h1{font-size:clamp(36px,8vw,52px)}
+h2{font-size:clamp(28px,6vw,36px)}
+h3{font-size:clamp(20px,4vw,24px)}
+p{font-size:17px}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+section{padding:80px 0}
+
+/* Buttons */
+.btn{display:inline-block;font-family:'Poppins',sans-serif;font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.5px;padding:16px 36px;border-radius:12px;border:none;cursor:pointer;transition:all .25s ease;text-decoration:none}
+.btn-cta{background:var(--cta);color:#fff;box-shadow:0 8px 25px rgba(255,87,51,.3)}
+.btn-cta:hover{background:#e04a2a;box-shadow:0 12px 35px rgba(255,87,51,.45);transform:translateY(-3px)}
+.btn-outline{background:transparent;color:var(--text);border:2px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+/* Nav */
+nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(247,247,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px 0;transition:all .3s}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.7rem;color:var(--cta);text-decoration:none}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links .btn{padding:10px 24px;font-size:14px}
+.hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text)}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden;background:linear-gradient(160deg,#F7F7FB 60%,#eef6ff 100%)}
+.hero::after{content:'';position:absolute;top:-100px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,87,51,.08) 0%,transparent 70%);border-radius:50%;z-index:0}
+.hero::before{content:'';position:absolute;bottom:-80px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,212,255,.07) 0%,transparent 70%);border-radius:50%;z-index:0}
+.hero-content{text-align:center;position:relative;z-index:1;max-width:750px;margin:0 auto}
+.hero h1{margin-bottom:1.5rem}
+.hero h1 span{color:var(--cta)}
+.hero>div>p{color:#4b5563;margin-bottom:2.5rem;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
+.trust-strip{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:14px;color:#6b7280;font-weight:500}
+.trust-strip span{display:flex;align-items:center;gap:6px}
+
+/* Marquee */
+.marquee-section{background:var(--cta);padding:14px 0;overflow:hidden;position:relative}
+.marquee-track{display:flex;gap:3rem;animation:marquee 22s linear infinite;white-space:nowrap}
+.marquee-track span{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:1rem}
+.marquee-track span::after{content:'✦';font-size:.7rem;opacity:.6}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* Section headers */
+.sec-header{text-align:center;margin-bottom:3.5rem}
+.sec-header p{color:#6b7280;max-width:550px;margin:.75rem auto 0}
+.sec-header .badge{display:inline-block;background:rgba(0,212,255,.1);color:var(--accent);font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:50px;margin-bottom:1rem}
+
+/* Steps */
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;text-align:center;transition:all .3s;position:relative}
+.step-card:hover{box-shadow:var(--card-hover);transform:translateY(-4px)}
+.step-num{width:48px;height:48px;background:var(--cta);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;margin:0 auto 1.2rem}
+.step-card h3{margin-bottom:.8rem}
+.step-card p{color:#6b7280;font-size:15px}
+
+/* Services */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+.svc-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
+.svc-card:hover{box-shadow:var(--card-hover);transform:translateY(-4px);border-color:var(--accent)}
+.svc-card .icon{font-size:2rem;margin-bottom:1rem}
+.svc-card h3{margin-bottom:.6rem;font-size:1.15rem}
+.svc-card p{color:#6b7280;font-size:15px}
+
+/* Booking */
+.booking-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.calendar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--card-shadow)}
+.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.days-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
+.day-col{text-align:center}
+.day-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:.75rem}
+.slot{padding:10px 4px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;margin-bottom:6px;transition:all .2s;cursor:pointer}
+.slot.available:hover{border-color:var(--cta);color:var(--cta);background:rgba(255,87,51,.04);transform:translateY(-1px)}
+.slot.available.selected{background:var(--cta);color:#fff;border-color:var(--cta);box-shadow:0 4px 12px rgba(255,87,51,.25)}
+.slot.booked{opacity:.3;cursor:not-allowed;text-decoration:line-through;background:#f9fafb}
+.booking-form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--card-shadow);display:none}
+.booking-form-card.active{display:block;animation:fadeUp .4s ease}
+.booking-form-card h3{margin-bottom:.5rem}
+#sel-time{display:inline-block;background:rgba(255,87,51,.08);color:var(--cta);font-weight:600;padding:4px 14px;border-radius:20px;font-size:14px;margin-bottom:1.5rem}
+
+/* Forms */
+.form-group{margin-bottom:1.25rem}
+label{display:block;margin-bottom:6px;font-size:14px;font-weight:500;color:#374151}
+input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;color:var(--text);background:#fff;transition:all .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
+select option{color:var(--text)}
+::placeholder{color:#9ca3af}
+.request-wrap{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3rem;box-shadow:var(--card-shadow)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+
+/* Testimonials */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+.test-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
+.test-card:hover{box-shadow:var(--card-hover);transform:translateY(-3px)}
+.stars{color:#facc15;margin-bottom:1rem;font-size:1.1rem;letter-spacing:2px}
+.test-text{color:#4b5563;font-style:italic;margin-bottom:1.5rem;line-height:1.7}
+.reviewer{display:flex;align-items:center;gap:.75rem}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--cta);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem}
+.reviewer-info h4{font-size:.95rem;margin:0}
+.reviewer-info p{font-size:13px;color:#9ca3af;margin:0}
+
+/* FAQ */
+.faq-wrap{max-width:740px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:1.05rem;transition:color .2s;gap:1rem}
+.faq-q:hover{color:var(--cta)}
+.faq-icon{font-size:1.4rem;color:var(--cta);transition:transform .3s;flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .35s,margin .3s;opacity:0;color:#6b7280;line-height:1.7}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{max-height:200px;opacity:1;margin-top:1rem}
+
+/* Footer */
+footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
+.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand .logo{color:#fff;font-size:1.6rem;display:inline-block;margin-bottom:.75rem}
+.footer-brand p{font-size:15px;color:#9ca3af;max-width:280px}
+.ft-col h4{color:#fff;margin-bottom:1rem;font-size:1rem}
+.ft-links{display:flex;flex-direction:column;gap:.6rem}
+.ft-links a{color:#9ca3af;text-decoration:none;font-size:15px;transition:color .2s}
+.ft-links a:hover{color:var(--accent)}
+.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);font-size:14px;color:#6b7280}
+
+/* Animations */
+.anim{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.anim.show{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-content{opacity:0;transform:translateY(28px);animation:fadeUp .9s ease forwards .2s}
+
+/* Responsive */
+@media(max-width:992px){.booking-wrap,.footer-grid{grid-template-columns:1fr}.steps-grid,.test-grid{grid-template-columns:1fr}}
+@media(max-width:768px){
+.nav-links{position:fixed;top:65px;left:0;width:100%;background:rgba(247,247,251,.97);backdrop-filter:blur(14px);flex-direction:column;align-items:center;padding:2rem 0;gap:1.5rem;transform:translateY(-120%);transition:transform .4s cubic-bezier(.16,1,.3,1);border-bottom:1px solid var(--border)}
+.nav-links.open{transform:translateY(0)}
+.hamburger{display:block}
+.days-grid{grid-template-columns:1fr;gap:1.5rem}
+.day-col{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.day-name{grid-column:1/-1}
+.form-grid{grid-template-columns:1fr!important}
+.trust-strip{flex-direction:column;align-items:center;gap:.5rem}
+.footer-grid{text-align:center}
+.footer-brand p{margin:0 auto}
+.ft-links{align-items:center}
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+<div class="container nav-inner">
+<a href="#" class="logo">UPin24</a>
+<button class="hamburger" aria-label="Menu">☰</button>
+<div class="nav-links">
+<a href="#how">How It Works</a>
+<a href="#services">Services</a>
+<a href="#testimonials">Reviews</a>
+<a href="#faq">FAQ</a>
+<a href="#book" class="btn btn-cta" style="padding:10px 22px;font-size:14px">BOOK NOW</a>
+</div>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+<div class="container hero-content">
+<div class="trust-strip" style="margin-bottom:2rem">
+<span>⚡ Delivered in under 24hrs</span>
+<span>🤝 White-glove handover</span>
+<span>💸 No hidden hosting costs</span>
+</div>
+<h1>Your Dream Website.<br><span>Built in 24 Hours.</span></h1>
+<p>Not just a website — a brand experience crafted with personal attention, handed to you with full guidance, ready to run for free.</p>
+<div class="hero-btns">
+<a href="#book" class="btn btn-cta">Book Free Consultation</a>
+<a href="#request" class="btn btn-outline">Request Your Website</a>
+</div>
+</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+<div class="marquee-track">
+<span>Live in 24 Hours</span><span>Personal Care, Not Automation</span><span>Guided Handover Included</span><span>Built for Your Brand</span><span>Zero Cost to Run</span>
+<span>Live in 24 Hours</span><span>Personal Care, Not Automation</span><span>Guided Handover Included</span><span>Built for Your Brand</span><span>Zero Cost to Run</span>
+</div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="container">
+<div class="sec-header anim"><span class="badge">Simple Process</span><h2>How It Works</h2><p>A seamless, hassle-free journey from brief to launch.</p></div>
+<div class="steps-grid">
+<div class="step-card anim"><div class="step-num">1</div><h3>Book or Brief</h3><p>Book a free consultation or send your project brief online — no commitment needed.</p></div>
+<div class="step-card anim"><div class="step-num">2</div><h3>We Build It</h3><p>We build your custom, dynamic website after your confirmation — delivered in 24 hours.</p></div>
+<div class="step-card anim"><div class="step-num">3</div><h3>You Own It</h3><p>Handover with a live guided session — you're fully in control from day one.</p></div>
+</div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background:#fff">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Why UPin24</span><h2>What Makes Us Different</h2><p>We redefine web creation. Fast, transparent, and completely yours.</p></div>
+<div class="services-grid">
+<div class="svc-card anim"><div class="icon">⚡</div><h3>24-Hour Delivery</h3><p>Dynamic, fully functional websites shipped fast — not templates, custom builds.</p></div>
+<div class="svc-card anim"><div class="icon">🎯</div><h3>Personal Touch</h3><p>Every site built around your brand's unique identity with meticulous care.</p></div>
+<div class="svc-card anim"><div class="icon">🤝</div><h3>Handheld Handover</h3><p>Live session to walk you through your code and how to run it confidently.</p></div>
+<div class="svc-card anim"><div class="icon">💰</div><h3>Run for Free</h3><p>Best practices and free tools shared so your site costs you nothing to maintain.</p></div>
+<div class="svc-card anim"><div class="icon">📬</div><h3>Book & Pay on Delivery</h3><p>No upfront risk. Confirm, receive, then pay — it's that simple.</p></div>
+<div class="svc-card anim"><div class="icon">🔒</div><h3>No Agents, Just Humans</h3><p>You get personal care, not automated pipelines or chatbots.</p></div>
+</div>
+</div>
+</section>
+
+<!-- BOOKING -->
+<section id="book">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Limited Spots</span><h2>Book Your Free Consultation</h2><p>Pick a time that works for you and let's discuss your dream site.</p></div>
+<div class="booking-wrap">
+<div class="calendar-card anim">
+<div class="cal-head"><h3>Select a Time</h3><span style="font-size:13px;color:#9ca3af">This Week</span></div>
+<div class="days-grid" id="daysGrid"></div>
+</div>
+<div class="booking-form-card" id="bookingForm">
+<h3>Your Details</h3>
+<span id="sel-time"></span>
+<form id="consultForm">
+<input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+<input type="hidden" name="subject" value="New Consultation Booking - UPin24">
+<input type="hidden" name="booking_time" id="bookTimeVal">
+<div class="form-group"><label>Name</label><input type="text" name="name" required placeholder="John Doe"></div>
+<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div>
+<div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="+1 234 567 8900"></div>
+<div class="form-group"><label>Brief Project Description</label><textarea name="description" rows="3" required placeholder="I need a portfolio site for..."></textarea></div>
+<button type="submit" class="btn btn-cta" style="width:100%">CONFIRM BOOKING</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+
+<!-- REQUEST FORM -->
+<section id="request" style="background:#fff">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Get Started</span><h2>Tell Us What You Need</h2><p>Already know what you want? Fill out the brief and bypass the consultation.</p></div>
+<div class="request-wrap anim">
+<form id="requestForm">
+<input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+<input type="hidden" name="subject" value="New Website Request - UPin24">
+<div class="form-grid">
+<div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="Jane Doe"></div>
+<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="jane@example.com"></div>
+<div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="+1 234 567 8900"></div>
+<div class="form-group"><label>Business / Brand Name</label><input type="text" name="business" placeholder="Acme Corp"></div>
+<div class="form-group" style="grid-column:1/-1"><label>Website Type</label><select name="type"><option>Portfolio</option><option>Business</option><option>E-commerce</option><option>Blog</option><option>Other</option></select></div>
+<div class="form-group" style="grid-column:1/-1"><label>Key Features Needed</label><textarea name="features" rows="4" required placeholder="E.g. gallery, contact form, dark mode..."></textarea></div>
+<div class="form-group"><label>Budget Range (Optional)</label><select name="budget"><option>Under $500</option><option>$500 – $1000</option><option>$1000 – $2000</option><option>$2000+</option></select></div>
+<div class="form-group"><label>How did you hear about us?</label><input type="text" name="source" placeholder="Social Media, Referral, etc."></div>
+</div>
+<button type="submit" class="btn btn-cta" style="width:100%;margin-top:.75rem">SUBMIT REQUEST</button>
+</form>
+</div>
+</div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Social Proof</span><h2>What Our Clients Say</h2><p>Don't just take our word for it.</p></div>
+<div class="test-grid">
+<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"I couldn't believe they actually delivered my portfolio in under 24 hours. The design is spectacular and the handover call made it so easy to manage."</p><div class="reviewer"><div class="avatar">SJ</div><div class="reviewer-info"><h4>Sarah Jenkins</h4><p>Founder, Bloom Studio</p></div></div></div>
+<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"The zero hosting cost alone sold me, but the personal touch is what makes UPin24 different. Real humans helping my business grow."</p><div class="reviewer"><div class="avatar">MR</div><div class="reviewer-info"><h4>Mike Rodriguez</h4><p>E-commerce Owner</p></div></div></div>
+<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"Stunning design, super fast performance, and the code was beautifully structured. The live session empowered me to take control."</p><div class="reviewer"><div class="avatar">AT</div><div class="reviewer-info"><h4>Amanda Tran</h4><p>Tech Consultant</p></div></div></div>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="background:#fff">
+<div class="container">
+<div class="sec-header anim"><span class="badge">FAQ</span><h2>Frequently Asked Questions</h2></div>
+<div class="faq-wrap anim">
+<div class="faq-item"><div class="faq-q"><span>How can you build a website in 24 hours?</span><span class="faq-icon">+</span></div><div class="faq-a">We leverage highly optimized workflows, custom foundations, and direct personal execution to rapidly construct and finalize your website without unnecessary delays or bureaucracy.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Do I need any technical knowledge to manage my site?</span><span class="faq-icon">+</span></div><div class="faq-a">Not at all! Our handheld handover session walks you through exactly how to edit, update, and manage your website with confidence.</div></div>
+<div class="faq-item"><div class="faq-q"><span>What does the handheld session include?</span><span class="faq-icon">+</span></div><div class="faq-a">A live screen-share call where we tour your new website, show you how everything works, and make sure you feel 100% comfortable running it on your own.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Are there any hidden monthly costs?</span><span class="faq-icon">+</span></div><div class="faq-a">No! We deliver lightweight, fast sites using tools that cost zero dollars a month to host and run. No surprise invoices from us — ever.</div></div>
+<div class="faq-item"><div class="faq-q"><span>When do I pay?</span><span class="faq-icon">+</span></div><div class="faq-a">You only pay when the website is delivered and you are completely satisfied. Zero upfront risk — that's our promise.</div></div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand"><a href="#" class="logo">UPin24</a><p>Your Dream Website. Built in 24 Hours. Run for free, forever.</p></div>
+<div class="ft-col"><h4>Quick Links</h4><div class="ft-links"><a href="#how">How It Works</a><a href="#services">Services</a><a href="#book">Book Appointment</a><a href="#request">Request Website</a></div></div>
+<div class="ft-col"><h4>Contact</h4><div class="ft-links"><a href="mailto:trprabudevan@gmail.com">trprabudevan@gmail.com</a><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div></div>
+</div>
+<div class="footer-bottom">&copy; 2025 UPin24. All rights reserved.</div>
+</div>
+</footer>
+
+<script>
+// Nav
+const hb=document.querySelector('.hamburger'),nl=document.querySelector('.nav-links');
+hb.addEventListener('click',()=>{nl.classList.toggle('open');hb.textContent=nl.classList.contains('open')?'✕':'☰'});
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{nl.classList.remove('open');hb.textContent='☰'}));
+
+// Scroll animations
+const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('show');obs.unobserve(en.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.anim').forEach((el,i)=>{el.style.transitionDelay=`${(i%4)*.08}s`;obs.observe(el)});
+
+// Booking calendar — seeded randomness
+function sRand(s){let x=Math.sin(s++)*10000;return x-Math.floor(x)}
+const dNames=['Monday','Tuesday','Wednesday','Thursday','Friday'],tSlots=['10:00 AM','11:00 AM','12:00 PM','2:00 PM','3:00 PM','4:00 PM'];
+const td=new Date(),seed=td.getFullYear()*10000+(td.getMonth()+1)*100+td.getDate();
+const dg=document.getElementById('daysGrid');
+dNames.forEach((d,di)=>{
+const col=document.createElement('div');col.className='day-col';
+const dn=document.createElement('div');dn.className='day-name';dn.textContent=d;col.appendChild(dn);
+const ds=seed+di,nb=Math.floor(sRand(ds)*2)+2;let av=[0,1,2,3,4,5],bk=[];
+for(let i=0;i<nb;i++){const r=Math.floor(sRand(ds+i*10)*av.length);bk.push(av[r]);av.splice(r,1)}
+tSlots.forEach((t,ti)=>{
+const s=document.createElement('div');s.className=`slot ${bk.includes(ti)?'booked':'available'}`;s.textContent=t;
+if(!bk.includes(ti))s.addEventListener('click',()=>{
+document.querySelectorAll('.slot').forEach(x=>x.classList.remove('selected'));s.classList.add('selected');
+const info=`${d} at ${t}`;document.getElementById('sel-time').textContent='📅 '+info;document.getElementById('bookTimeVal').value=info;
+const bf=document.getElementById('bookingForm');bf.classList.add('active');
+if(window.innerWidth<992)setTimeout(()=>bf.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+});
+col.appendChild(s)});dg.appendChild(col)});
+
+// FAQ
+document.querySelectorAll('.faq-item').forEach(it=>{it.querySelector('.faq-q').addEventListener('click',()=>{
+const wasOpen=it.classList.contains('open');
+document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.querySelector('.faq-icon').textContent='+'});
+if(!wasOpen){it.classList.add('open');it.querySelector('.faq-icon').textContent='−'}
+})});
+
+// Form submissions
+function handleForm(form,successHTML){
+form.addEventListener('submit',function(e){e.preventDefault();
+const btn=this.querySelector('button[type="submit"]'),orig=btn.textContent;btn.textContent='SENDING...';btn.disabled=true;btn.style.opacity='.7';
+fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(form)}).then(r=>r.json()).then(d=>{
+if(d.success){form.closest('.booking-form-card,.request-wrap').innerHTML=successHTML}else throw 0
+}).catch(()=>{btn.textContent=orig;btn.disabled=false;btn.style.opacity='1';alert('Submission failed. Please check your access key or try again.')})
+})}
+handleForm(document.getElementById('consultForm'),'<div style="text-align:center;padding:2.5rem 0"><div style="font-size:3rem;margin-bottom:1rem">✨</div><h3 style="color:var(--success);margin-bottom:.5rem">Your slot is confirmed!</h3><p style="color:#6b7280">Expect a confirmation email shortly.</p></div>');
+handleForm(document.getElementById('requestForm'),'<div style="text-align:center;padding:3rem 0"><div style="font-size:3rem;margin-bottom:1rem">🚀</div><h3 style="color:var(--success);margin-bottom:.75rem">Request Received!</h3><p style="color:#6b7280;max-width:380px;margin:0 auto">Thanks! We\'ll review your brief and reach out within a few hours.</p></div>');
+</script>
+</body>
+</html>
