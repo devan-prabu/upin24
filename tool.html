@@ -123,7 +123,8 @@ No template handy? <a href="#" id="sampleLink" style="color:var(--accent)">Downl
 <textarea id="nlInput" placeholder="e.g.  wir no is WIR-034, zone to Z-02, date today, activity is blockwork, contractor: ABC Contracting LLC"></textarea>
 <div class="nl-row">
 <button class="btn btn-cta" id="applyBtn">Apply to Fields</button>
-<span class="hint">Separate items with commas or new lines. "today", "tomorrow", "next monday" become real dates. Ctrl+Enter also applies.</span>
+<button class="btn btn-navy" id="aiBtn" style="display:none">✨ Smart Parse (AI)</button>
+<span class="hint" id="nlHint">Separate items with commas or new lines. "today", "tomorrow", "next monday" become real dates. Ctrl+Enter also applies.</span>
 </div>
 <div id="nlFeedback"></div>
 <div class="fields-grid" id="fieldsGrid"></div>
@@ -481,6 +482,42 @@ return{applied,unmatched};
 }
 $('applyBtn').addEventListener('click',()=>{if(state)applyNLText($('nlInput').value)});
 $('nlInput').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter'&&state)applyNLText($('nlInput').value)});
+
+/* AI parse — enabled only when a backend with an LLM key is serving this page */
+fetch('api/health').then(r=>r.json()).then(d=>{
+if(d&&d.ok){
+$('aiBtn').style.display='inline-block';
+$('nlHint').textContent='Smart Parse understands free-form notes ("the pour we discussed got moved to friday"). Quick Apply handles "field: value" style instantly, offline.';
+}
+}).catch(()=>{});
+async function aiParse(text){
+const r=await fetch('api/parse',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({text,fields:state.placeholders,dateFormat:$('dateFmt').value})});
+const d=await r.json().catch(()=>({}));
+if(!r.ok)throw new Error(d.error||('HTTP '+r.status));
+return d;
+}
+$('aiBtn').addEventListener('click',async()=>{
+if(!state)return;
+const text=$('nlInput').value.trim();
+if(!text)return;
+const btn=$('aiBtn'),orig=btn.textContent;
+btn.disabled=true;btn.textContent='Parsing…';
+try{
+const d=await aiParse(text);
+let n=0;
+for(const[f,v]of Object.entries(d.values||{})){
+if(state.placeholders.includes(f)&&v){setValue(f,String(v));n++}
+}
+updateNamePreview();
+$('nlFeedback').innerHTML=n
+?'<span class="ok">✓ AI filled '+n+' field(s): '+Object.entries(d.values).map(([f,v])=>'<b>'+escXml(prettyName(f))+'</b> = '+escXml(String(v))).join(' · ')+'</span>'
+:'<span class="bad">The AI found nothing to fill — check the note mentions field values.</span>';
+}catch(err){
+$('nlFeedback').innerHTML='<span class="bad">AI parse failed: '+escXml(err.message||String(err))+'</span> <span class="hint">Applied the quick parser instead.</span>';
+applyNLText(text);
+}finally{btn.disabled=false;btn.textContent=orig}
+});
 
 /* generate */
 ['namePattern','dateFmt'].forEach(id=>$(id).addEventListener('input',updateNamePreview));
