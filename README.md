@@ -36,6 +36,30 @@ Anthropic uses its own wire format — set `LLM_PROVIDER=anthropic` with `LLM_MO
 
 Each parse is ~500 tokens, so cost per WIR is a fraction of a cent on any of these.
 
+### Deploying
+
+**Render (one click, free tier):** dashboard → *New → Blueprint* → select this repo. `render.yaml` sets everything up (Groq defaults); you'll be prompted for `LLM_API_KEY`. Or use the deploy link:
+
+```
+https://render.com/deploy?repo=https://github.com/devan-prabu/upin24
+```
+
+**Railway:** *New Project → Deploy from GitHub repo* → select this repo. `railway.json` configures the start command and health check; add `LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_MODEL`, `LLM_API_KEY` under *Variables*.
+
+**Docker (any host):**
+
+```sh
+docker build -t wirflow .
+docker run -p 3000:3000 \
+  -e LLM_PROVIDER=openai \
+  -e LLM_BASE_URL=https://api.groq.com/openai/v1 \
+  -e LLM_MODEL=llama-3.3-70b-versatile \
+  -e LLM_API_KEY=gsk_... \
+  wirflow
+```
+
+All three run fine **without** `LLM_API_KEY` too — the site works and the AI button hides itself.
+
 ### API
 
 - `GET /api/health` → `{ok, provider, model}` — the tool uses this to decide whether to show the AI button
