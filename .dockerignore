@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+!.env.example
+*.md
+Dockerfile
+.dockerignore
+render.yaml
+railway.json

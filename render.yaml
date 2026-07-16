@@ -1,0 +1,22 @@
+# Render Blueprint — deploy WIRflow with one click:
+# Render dashboard → New → Blueprint → point it at this repo.
+# After the first deploy, set LLM_API_KEY in the service's Environment tab.
+services:
+  - type: web
+    name: wirflow
+    runtime: node
+    plan: free
+    buildCommand: "true"     # zero dependencies — nothing to build
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      # Defaults use Groq (generous free tier). Swap these three to change
+      # provider — see .env.example for DeepSeek/OpenRouter/Gemini/Anthropic.
+      - key: LLM_PROVIDER
+        value: openai
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: LLM_MODEL
+        value: llama-3.3-70b-versatile
+      - key: LLM_API_KEY
+        sync: false          # prompts you for the secret in the dashboard

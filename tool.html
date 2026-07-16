@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>WIRflow Template Tool — Fill Excel Submittals with Natural Language</title>
+<meta name="description" content="Upload your Excel submittal template, type what changed in plain English, and download a filled, correctly-named package. Formatting preserved 100%.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F8FA;--text:#0B1220;--muted:#5B6472;--cta:#F5A524;--cta-dark:#DB8B0F;--accent:#2563EB;--navy:#0F1E38;--border:#E2E5EA;--success:#16A34A;--danger:#DC2626;--card:#fff;--card-shadow:0 4px 24px rgba(15,30,56,0.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.2}
+.container{max-width:920px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:100;background:rgba(247,248,250,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.4rem;color:var(--navy);text-decoration:none}
+.logo span{color:var(--cta)}
+.nav-inner a.back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500}
+.nav-inner a.back:hover{color:var(--accent)}
+header.page{padding:48px 0 8px;text-align:center}
+header.page h1{font-size:clamp(26px,5vw,38px);margin-bottom:.6rem}
+header.page p{color:var(--muted);max-width:620px;margin:0 auto;font-size:16px}
+header.page .beta{display:inline-block;background:rgba(245,165,36,.15);color:var(--cta-dark);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1.2px;padding:5px 14px;border-radius:20px;margin-bottom:1rem}
+main{padding:32px 0 80px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;box-shadow:var(--card-shadow);margin-bottom:1.5rem}
+.card h2{font-size:1.15rem;display:flex;align-items:center;gap:.6rem;margin-bottom:1rem}
+.stepnum{width:30px;height:30px;background:var(--navy);color:#fff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.hint{font-size:13.5px;color:var(--muted)}
+.btn{display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;padding:12px 24px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;text-align:center}
+.btn-cta{background:var(--cta);color:#0B1220}
+.btn-cta:hover{background:var(--cta-dark);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--text);border:2px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.drop{border:2px dashed var(--border);border-radius:12px;padding:2.2rem 1rem;text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc}
+.drop:hover,.drop.over{border-color:var(--cta);background:rgba(245,165,36,.05)}
+.drop .big{font-size:2rem;margin-bottom:.4rem}
+.drop p{font-size:15px;color:var(--muted)}
+.drop p b{color:var(--text)}
+.tpl-loaded{display:none;align-items:center;gap:.75rem;background:rgba(22,163,74,.07);border:1px solid rgba(22,163,74,.25);border-radius:10px;padding:.8rem 1rem;margin-top:1rem;font-size:14.5px}
+.tpl-loaded.show{display:flex}
+.tpl-loaded .name{font-weight:600}
+details.help{margin-top:1rem;font-size:14px;color:var(--muted)}
+details.help summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details.help div{margin-top:.6rem;line-height:1.7}
+code{background:#eef1f5;border-radius:5px;padding:1px 6px;font-size:.9em;color:var(--navy)}
+textarea,input,select{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:14.5px;color:var(--text);background:#fff;transition:all .15s}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+::placeholder{color:#9ca3af}
+label{display:block;margin-bottom:5px;font-size:13px;font-weight:600;color:#374151}
+#nlInput{min-height:84px;resize:vertical;font-size:15px}
+.nl-row{display:flex;gap:.75rem;margin-top:.75rem;flex-wrap:wrap;align-items:center}
+#nlFeedback{font-size:13.5px;margin-top:.6rem;line-height:1.7}
+#nlFeedback .ok{color:var(--success)}
+#nlFeedback .bad{color:var(--danger)}
+.fields-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.25rem}
+.fgroup{position:relative}
+.fgroup.full{grid-column:1/-1}
+.fgroup .today{position:absolute;right:6px;top:27px;background:rgba(245,165,36,.15);border:none;color:var(--cta-dark);font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:6px;cursor:pointer}
+.fgroup .today:hover{background:rgba(245,165,36,.3)}
+.fgroup input.flash,.fgroup textarea.flash{border-color:var(--success);box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.out-grid{display:grid;grid-template-columns:1fr 200px;gap:1rem}
+.check{display:flex;align-items:center;gap:.5rem;font-size:14px;margin-top:.9rem;color:var(--text)}
+.check input{width:auto}
+#namePreview{font-size:13.5px;color:var(--muted);margin-top:.5rem}
+#namePreview b{color:var(--navy)}
+.gen-row{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-top:1.25rem}
+#genMsg{font-size:14px}
+#genMsg.ok{color:var(--success);font-weight:600}
+#genMsg.bad{color:var(--danger)}
+.locked{opacity:.45;pointer-events:none}
+footer{border-top:1px solid var(--border);padding:1.5rem 0;text-align:center;font-size:13.5px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+.privacy{text-align:center;font-size:13px;color:var(--muted);margin-top:-6px;margin-bottom:26px}
+@media(max-width:680px){.fields-grid,.out-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container nav-inner">
+<a href="index.html" class="logo">WIR<span>flow</span></a>
+<a href="index.html" class="back">← Back to site</a>
+</div>
+</nav>
+
+<header class="page container">
+<span class="beta">Template Tool · Beta</span>
+<h1>Fill Your Excel Submittals in Plain English</h1>
+<p>Upload the Excel template you already use. Type what's changed — <i>"WIR no is 034, zone to Z-02, date today"</i> — and download a filled, correctly-named copy. Your formatting is never touched.</p>
+</header>
+<p class="privacy container">🔒 Everything runs in your browser. Your files never leave your device.</p>
+
+<main class="container">
+
+<!-- STEP 1 -->
+<section class="card" id="step1">
+<h2><span class="stepnum">1</span> Upload your template</h2>
+<div class="drop" id="drop">
+<div class="big">📄</div>
+<p><b>Drop your .xlsx template here</b> or click to browse</p>
+<p style="font-size:13px;margin-top:.3rem">Works with any Excel workbook (.xlsx / .xlsm / .xltx)</p>
+</div>
+<input type="file" id="fileInput" accept=".xlsx,.xlsm,.xltx" hidden>
+<div class="tpl-loaded" id="tplLoaded">
+<span style="font-size:1.3rem">✅</span>
+<div><span class="name" id="tplName"></span> — <span id="tplStats"></span></div>
+</div>
+<details class="help">
+<summary>How do I prepare my template? (one-time, 2 minutes)</summary>
+<div>
+Open your existing Excel form and type a marker like <code>{{wir_no}}</code>, <code>{{date}}</code>, <code>{{zone}}</code>, <code>{{contractor}}</code> into each cell you edit every time. Save it once — that's your master template forever. WIRflow finds the markers automatically and replaces only them, so every logo, border, merged cell, and formula stays exactly as it was.<br><br>
+No template handy? <a href="#" id="sampleLink" style="color:var(--accent)">Download a sample WIR template</a> to try the flow right now.
+</div>
+</details>
+</section>
+
+<!-- STEP 2 -->
+<section class="card locked" id="step2">
+<h2><span class="stepnum">2</span> Tell it what changed — in plain English</h2>
+<textarea id="nlInput" placeholder="e.g.  wir no is WIR-034, zone to Z-02, date today, activity is blockwork, contractor: ABC Contracting LLC"></textarea>
+<div class="nl-row">
+<button class="btn btn-cta" id="applyBtn">Apply to Fields</button>
+<button class="btn btn-navy" id="aiBtn" style="display:none">✨ Smart Parse (AI)</button>
+<span class="hint" id="nlHint">Separate items with commas or new lines. "today", "tomorrow", "next monday" become real dates. Ctrl+Enter also applies.</span>
+</div>
+<div id="nlFeedback"></div>
+<div class="fields-grid" id="fieldsGrid"></div>
+</section>
+
+<!-- STEP 3 -->
+<section class="card locked" id="step3">
+<h2><span class="stepnum">3</span> Generate the filled package</h2>
+<div class="out-grid">
+<div>
+<label>Output file name pattern</label>
+<input type="text" id="namePattern" value="{{template}}_{{date}}">
+<div id="namePreview"></div>
+</div>
+<div>
+<label>Date format</label>
+<select id="dateFmt">
+<option value="DD-MM-YYYY">DD-MM-YYYY</option>
+<option value="DD/MM/YYYY">DD/MM/YYYY</option>
+<option value="YYYY-MM-DD">YYYY-MM-DD</option>
+<option value="MM/DD/YYYY">MM/DD/YYYY</option>
+<option value="DD-MMM-YYYY">DD-MMM-YYYY</option>
+</select>
+</div>
+</div>
+<span class="hint">Use any field as a token — e.g. <code>WIR_{{wir_no}}_{{zone}}_{{date}}</code></span>
+<div class="check"><input type="checkbox" id="blankUnfilled" checked><label for="blankUnfilled" style="margin:0;font-weight:500">Blank out any markers I didn't fill (untick to leave <code>{{...}}</code> visible)</label></div>
+<div class="check"><input type="checkbox" id="rememberVals"><label for="rememberVals" style="margin:0;font-weight:500">Remember these values for this template (saved on this device only)</label></div>
+<div class="gen-row">
+<button class="btn btn-cta" id="genBtn" style="font-size:15px;padding:14px 32px">⬇ Generate &amp; Download</button>
+<span id="genMsg"></span>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="container">WIRflow Template Tool · Beta — <a href="index.html">wirflow home</a> · <a href="mailto:trprabudevan@gmail.com">feedback</a></div>
+</footer>
+
+<script>
+'use strict';
+/* ================= tiny zip (dependency-free) ================= */
+const CRC_TABLE=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[n]=c>>>0}return t})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=CRC_TABLE[(c^u8[i])&0xFF]^(c>>>8);return(c^0xFFFFFFFF)>>>0}
+async function inflateRaw(u8){const r=new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('deflate-raw')));return new Uint8Array(await r.arrayBuffer())}
+async function deflateRaw(u8){if(typeof CompressionStream==='undefined')return null;const r=new Response(new Blob([u8]).stream().pipeThrough(new CompressionStream('deflate-raw')));return new Uint8Array(await r.arrayBuffer())}
+
+function parseZip(buf){
+const u8=new Uint8Array(buf),dv=new DataView(buf instanceof ArrayBuffer?buf:buf.buffer);
+let eocd=-1;
+for(let i=u8.length-22;i>=Math.max(0,u8.length-22-65535);i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}}
+if(eocd<0)throw new Error('This does not look like a valid .xlsx file.');
+const count=dv.getUint16(eocd+10,true),cdOff=dv.getUint32(eocd+16,true);
+if(cdOff===0xFFFFFFFF)throw new Error('ZIP64 workbooks are not supported yet.');
+const td=new TextDecoder();const entries=[];let p=cdOff;
+for(let i=0;i<count;i++){
+if(dv.getUint32(p,true)!==0x02014b50)throw new Error('Corrupt workbook (central directory).');
+const method=dv.getUint16(p+10,true),crc=dv.getUint32(p+16,true),csize=dv.getUint32(p+20,true),usize=dv.getUint32(p+24,true);
+const nlen=dv.getUint16(p+28,true),elen=dv.getUint16(p+30,true),clen=dv.getUint16(p+32,true),loff=dv.getUint32(p+42,true);
+const name=td.decode(u8.subarray(p+46,p+46+nlen));
+const lnlen=dv.getUint16(loff+26,true),lelen=dv.getUint16(loff+28,true);
+const dstart=loff+30+lnlen+lelen;
+entries.push({name,method,crc,usize,comp:u8.slice(dstart,dstart+csize)});
+p+=46+nlen+elen+clen;
+}
+return entries;
+}
+async function entryText(e){
+if(e.method===0)return new TextDecoder().decode(e.comp);
+if(e.method===8)return new TextDecoder().decode(await inflateRaw(e.comp));
+throw new Error('Unsupported compression in '+e.name);
+}
+function dosDateTime(d){return{time:(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),date:(((d.getFullYear()-1980)&0x7f)<<9)|((d.getMonth()+1)<<5)|d.getDate()}}
+async function buildZip(entries){
+const te=new TextEncoder(),now=dosDateTime(new Date());
+const parts=[],central=[];let off=0;
+for(const e of entries){
+let method,crc,usize,comp;
+if(e.raw){usize=e.raw.length;crc=crc32(e.raw);const d=await deflateRaw(e.raw);if(d&&d.length<usize){method=8;comp=d}else{method=0;comp=e.raw}}
+else{method=e.method;crc=e.crc;usize=e.usize;comp=e.comp}
+const nb=te.encode(e.name);
+const lh=new DataView(new ArrayBuffer(30));
+lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,method,true);
+lh.setUint16(10,now.time,true);lh.setUint16(12,now.date,true);lh.setUint32(14,crc,true);lh.setUint32(18,comp.length,true);lh.setUint32(22,usize,true);
+lh.setUint16(26,nb.length,true);lh.setUint16(28,0,true);
+parts.push(new Uint8Array(lh.buffer),nb,comp);
+central.push({nb,method,crc,csize:comp.length,usize,off});
+off+=30+nb.length+comp.length;
+}
+const cdStart=off;
+for(const c of central){
+const ch=new DataView(new ArrayBuffer(46));
+ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,c.method,true);
+ch.setUint16(12,now.time,true);ch.setUint16(14,now.date,true);ch.setUint32(16,c.crc,true);ch.setUint32(20,c.csize,true);ch.setUint32(24,c.usize,true);
+ch.setUint16(28,c.nb.length,true);ch.setUint32(38,0,true);ch.setUint32(42,c.off,true);
+parts.push(new Uint8Array(ch.buffer),c.nb);
+off+=46+c.nb.length;
+}
+const eocd=new DataView(new ArrayBuffer(22));
+eocd.setUint32(0,0x06054b50,true);eocd.setUint16(8,central.length,true);eocd.setUint16(10,central.length,true);
+eocd.setUint32(12,off-cdStart,true);eocd.setUint32(16,cdStart,true);
+parts.push(new Uint8Array(eocd.buffer));
+return new Blob(parts,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+
+/* ================= xlsx placeholder engine ================= */
+const PH_RE=/\{\{\s*([^{}]+?)\s*\}\}/g;
+const escXml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const unescXml=s=>s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&#(\d+);/g,(m,n)=>String.fromCodePoint(+n)).replace(/&#x([0-9a-fA-F]+);/g,(m,n)=>String.fromCodePoint(parseInt(n,16))).replace(/&amp;/g,'&');
+const escRegex=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+
+/* Excel often splits text across formatting runs; merge runs inside <si>/<is>
+   blocks so markers like {{wir_no}} survive, rebuilding the block as one <t>. */
+function normalizeXml(xml,tag){
+const blockRe=new RegExp('<'+tag+'(?:\\s[^>]*)?>[\\s\\S]*?<\\/'+tag+'>','g');
+return xml.replace(blockRe,block=>{
+const texts=[...block.matchAll(/<t(?:\s[^>]*)?>([\s\S]*?)<\/t>/g)].map(m=>unescXml(m[1]));
+if(texts.length<2)return block;
+const full=texts.join('');
+if(!/\{\{[^{}]+\}\}/.test(full))return block;
+return '<'+tag+'><t xml:space="preserve">'+escXml(full)+'</t></'+tag+'>';
+});
+}
+const isTargetXml=name=>name==='xl/sharedStrings.xml'||/^xl\/worksheets\/[^/]+\.xml$/.test(name);
+
+async function analyzeTemplate(bytes){
+const entries=parseZip(bytes.buffer?bytes.buffer:bytes);
+const targets=[];const placeholders=[];const seen=new Set();
+for(let i=0;i<entries.length;i++){
+if(!isTargetXml(entries[i].name))continue;
+let text=await entryText(entries[i]);
+text=normalizeXml(text,'si');
+text=normalizeXml(text,'is');
+for(const m of text.matchAll(PH_RE)){const name=unescXml(m[1]).trim();if(!seen.has(name)){seen.add(name);placeholders.push(name)}}
+targets.push({index:i,text});
+}
+return{entries,targets,placeholders};
+}
+async function fillTemplate(state,values,blankUnfilled){
+const out=state.entries.map(e=>e);
+for(const t of state.targets){
+let text=t.text;
+for(const[name,val]of Object.entries(values)){
+if(val===''||val==null)continue;
+text=text.replace(new RegExp('\\{\\{\\s*'+escRegex(name)+'\\s*\\}\\}','g'),escXml(val));
+}
+if(blankUnfilled)text=text.replace(PH_RE,'');
+out[t.index]={name:state.entries[t.index].name,raw:new TextEncoder().encode(text)};
+}
+return buildZip(out);
+}
+
+/* ================= natural language parsing ================= */
+const ALIAS={no:'number',num:'number',nbr:'number','#':'number',dwg:'drawing',dwgs:'drawings',ref:'reference',qty:'quantity',desc:'description',descr:'description',engr:'engineer',eng:'engineer',contr:'contractor',loc:'location',insp:'inspection',proj:'project',rev:'revision'};
+const tok=s=>String(s).toLowerCase().split(/[^a-z0-9#]+/).filter(Boolean).map(w=>ALIAS[w]||w);
+function scoreMatch(field,q){
+const ft=tok(field),qt=tok(q);
+const fN=ft.join(''),qN=qt.join('');
+if(!fN||!qN)return 0;
+if(fN===qN)return 100;
+if(fN.includes(qN)||qN.includes(fN))return 72+28*Math.min(fN.length,qN.length)/Math.max(fN.length,qN.length);
+const fset=new Set(ft);let inter=0;for(const w of new Set(qt))if(fset.has(w))inter++;
+const uni=new Set([...ft,...qt]).size;
+return uni?(inter/uni)*80:0;
+}
+function bestField(fields,q,threshold=45){let best=null,bs=0;for(const f of fields){const s=scoreMatch(f,q);if(s>bs){bs=s;best=f}}return bs>=threshold?best:null}
+/* "date today" / "zone Z-02" — no separator word: try 1-3 leading words as the field name */
+function noSepParse(clause,fields){
+const words=clause.trim().split(/\s+/);
+for(let n=Math.min(3,words.length-1);n>=1;n--){
+const f=bestField(fields,words.slice(0,n).join(' '),60);
+if(f)return{field:f,rawValue:words.slice(n).join(' ')};
+}
+return null;
+}
+
+function fmtDate(d,fmt){
+const p=n=>String(n).padStart(2,'0');
+const MMM=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+return fmt.replace('YYYY',d.getFullYear()).replace('MMM',MMM).replace('MM',p(d.getMonth()+1)).replace('DD',p(d.getDate()));
+}
+function smartValue(v,fmt){
+const t=v.trim().replace(/^["']+|["']+$/g,'');
+const low=t.toLowerCase();const d=new Date();
+if(low==='today'||low==='now')return fmtDate(d,fmt);
+if(low==='tomorrow'){d.setDate(d.getDate()+1);return fmtDate(d,fmt)}
+if(low==='yesterday'){d.setDate(d.getDate()-1);return fmtDate(d,fmt)}
+const nm=low.match(/^next\s+(sun|mon|tues|wednes|thurs|fri|satur)day$/);
+if(nm){const target=['sun','mon','tues','wednes','thurs','fri','satur'].indexOf(nm[1]);let diff=(target-d.getDay()+7)%7;if(diff===0)diff=7;d.setDate(d.getDate()+diff);return fmtDate(d,fmt)}
+return t;
+}
+const CLAUSE_RE=/^(?:please\s+)?(?:set\s+|change\s+|update\s+|make\s+|put\s+)?(?:the\s+)?(.+?)\s*(?:=|:|\bto\b|\bis\b|\bare\b|\bas\b)\s*(.+)$/i;
+function splitClauses(text,fields){
+const startsClause=p=>CLAUSE_RE.test(p)||noSepParse(p,fields)!==null;
+const out=[];
+for(const line of text.split(/[\n;]+/)){
+const local=[];
+for(const part of line.split(',')){
+if(!part.trim())continue;
+if(startsClause(part.trim())||!local.length)local.push(part.trim());
+else local[local.length-1]+=', '+part.trim();
+}
+out.push(...local);
+}
+return out.filter(Boolean);
+}
+function parseNL(text,fields,fmt){
+const applied=[],unmatched=[];
+for(const clause of splitClauses(text,fields)){
+const m=clause.match(CLAUSE_RE);
+if(m){
+const field=bestField(fields,m[1]);
+if(field){applied.push({field,value:smartValue(m[2],fmt)});continue}
+}
+const ns=noSepParse(clause,fields);
+if(ns){applied.push({field:ns.field,value:smartValue(ns.rawValue,fmt)});continue}
+unmatched.push(clause);
+}
+return{applied,unmatched};
+}
+
+/* ================= sample template ================= */
+function sampleSheetXml(){
+const rows=[['WORK INSPECTION REQUEST',''],['',''],
+['WIR No:','{{wir_no}}'],['Date:','{{date}}'],['Project:','{{project}}'],['Zone / Area:','{{zone}}'],
+['Grid Reference:','{{grid_ref}}'],['Activity:','{{activity}}'],['Contractor:','{{contractor}}'],
+['Drawing No(s):','{{drawings}}'],['Remarks:','{{remarks}}'],['Site Engineer:','{{engineer}}']];
+let body='';
+rows.forEach((r,i)=>{
+const n=i+1;let cells='';
+if(r[0])cells+=`<c r="A${n}" t="inlineStr"><is><t xml:space="preserve">${escXml(r[0])}</t></is></c>`;
+if(r[1])cells+=`<c r="B${n}" t="inlineStr"><is><t xml:space="preserve">${escXml(r[1])}</t></is></c>`;
+body+=cells?`<row r="${n}">${cells}</row>`:'';
+});
+return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols><col min="1" max="1" width="20" customWidth="1"/><col min="2" max="2" width="34" customWidth="1"/></cols><sheetData>${body}</sheetData></worksheet>`;
+}
+async function buildSampleXlsx(){
+const te=new TextEncoder();
+const files={
+'[Content_Types].xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`,
+'_rels/.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`,
+'xl/workbook.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="WIR" sheetId="1" r:id="rId1"/></sheets></workbook>`,
+'xl/_rels/workbook.xml.rels':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`,
+'xl/styles.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="1"><font><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/></cellXfs></styleSheet>`,
+'xl/worksheets/sheet1.xml':sampleSheetXml()
+};
+return buildZip(Object.entries(files).map(([name,text])=>({name,raw:te.encode(text)})));
+}
+
+/* ================= UI ================= */
+const $=id=>document.getElementById(id);
+let state=null; // {entries,targets,placeholders,templateName,ext}
+
+const prettyName=f=>f.replace(/[_-]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+const isDateField=f=>/date/i.test(f);
+const isLongField=f=>/(remark|description|note|comment|feature)/i.test(f);
+
+function renderFields(){
+const grid=$('fieldsGrid');grid.innerHTML='';
+for(const f of state.placeholders){
+const g=document.createElement('div');
+g.className='fgroup'+(isLongField(f)?' full':'');
+const lab=document.createElement('label');lab.textContent=prettyName(f);g.appendChild(lab);
+const inp=document.createElement(isLongField(f)?'textarea':'input');
+if(isLongField(f))inp.rows=2;
+inp.dataset.field=f;inp.placeholder='{{'+f+'}}';
+inp.addEventListener('input',updateNamePreview);
+g.appendChild(inp);
+if(isDateField(f)&&!isLongField(f)){
+const b=document.createElement('button');b.type='button';b.className='today';b.textContent='today';
+b.addEventListener('click',()=>{inp.value=fmtDate(new Date(),$('dateFmt').value);flash(inp);updateNamePreview()});
+g.appendChild(b);
+}
+grid.appendChild(g);
+}
+}
+function flash(inp){inp.classList.add('flash');setTimeout(()=>inp.classList.remove('flash'),1200)}
+function getValues(){
+const v={};
+document.querySelectorAll('#fieldsGrid [data-field]').forEach(i=>{v[i.dataset.field]=i.value.trim()});
+return v;
+}
+function setValue(field,value){
+const inp=document.querySelector(`#fieldsGrid [data-field="${CSS.escape(field)}"]`);
+if(inp){inp.value=value;flash(inp)}
+}
+function sanitizeFilename(s){return s.replace(/[\\/:*?"<>|\x00-\x1f]/g,'-').replace(/\s+/g,' ').trim()}
+function buildFilename(){
+const values=getValues();
+let name=$('namePattern').value||'{{template}}';
+name=name.replace(PH_RE,(m,f)=>{
+const key=f.trim();
+if(key==='template')return state?state.templateName:'template';
+if(key==='date'&&!(state&&state.placeholders.includes('date')&&values['date']))return fmtDate(new Date(),$('dateFmt').value).replace(/\//g,'-');
+const v=values[key];
+return v?v.replace(/\//g,'-'):'';
+});
+return sanitizeFilename(name)+(state?state.ext:'.xlsx');
+}
+function updateNamePreview(){$('namePreview').innerHTML='Will download as: <b>'+escXml(buildFilename())+'</b>'}
+
+async function loadFromBytes(bytes,filename){
+const a=await analyzeTemplate(bytes);
+if(!a.placeholders.length)throw new Error('No {{markers}} found in this workbook. Add markers like {{wir_no}} to the cells you edit each time, save, and upload again.');
+const dot=filename.lastIndexOf('.');
+state={...a,templateName:dot>0?filename.slice(0,dot):filename,ext:dot>0?filename.slice(dot):'.xlsx'};
+$('tplName').textContent=filename;
+$('tplStats').textContent=a.placeholders.length+' fields detected: '+a.placeholders.join(', ');
+$('tplLoaded').classList.add('show');
+$('step2').classList.remove('locked');
+$('step3').classList.remove('locked');
+renderFields();
+const saved=localStorage.getItem('wirflow.vals.'+state.templateName);
+if(saved){try{const vals=JSON.parse(saved);for(const[f,v]of Object.entries(vals))if(v)setValue(f,v);$('rememberVals').checked=true}catch(e){}}
+const savedPat=localStorage.getItem('wirflow.namePattern');
+if(savedPat)$('namePattern').value=savedPat;
+updateNamePreview();
+$('step2').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function handleFile(file){
+try{
+const bytes=new Uint8Array(await file.arrayBuffer());
+await loadFromBytes(bytes,file.name);
+}catch(err){alert(err.message||String(err))}
+}
+
+/* upload wiring */
+const drop=$('drop');
+drop.addEventListener('click',()=>$('fileInput').click());
+$('fileInput').addEventListener('change',e=>{if(e.target.files[0])handleFile(e.target.files[0])});
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+drop.addEventListener('drop',e=>{if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])});
+
+$('sampleLink').addEventListener('click',async e=>{
+e.preventDefault();
+const blob=await buildSampleXlsx();
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='WIR_Sample_Template.xlsx';a.click();
+setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+});
+
+/* NL apply */
+function applyNLText(text){
+const{applied,unmatched}=parseNL(text,state.placeholders,$('dateFmt').value);
+for(const{field,value}of applied)setValue(field,value);
+updateNamePreview();
+const fb=$('nlFeedback');
+let html='';
+if(applied.length)html+='<span class="ok">✓ Filled: '+applied.map(a=>'<b>'+escXml(prettyName(a.field))+'</b> = '+escXml(a.value)).join(' · ')+'</span>';
+if(unmatched.length)html+=(html?'<br>':'')+'<span class="bad">✗ Didn\'t understand: '+unmatched.map(escXml).join(' | ')+'</span> <span class="hint">Try "field: value" — fields are listed below.</span>';
+fb.innerHTML=html;
+return{applied,unmatched};
+}
+$('applyBtn').addEventListener('click',()=>{if(state)applyNLText($('nlInput').value)});
+$('nlInput').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter'&&state)applyNLText($('nlInput').value)});
+
+/* AI parse — enabled only when a backend with an LLM key is serving this page */
+fetch('api/health').then(r=>r.json()).then(d=>{
+if(d&&d.ok){
+$('aiBtn').style.display='inline-block';
+$('nlHint').textContent='Smart Parse understands free-form notes ("the pour we discussed got moved to friday"). Quick Apply handles "field: value" style instantly, offline.';
+}
+}).catch(()=>{});
+async function aiParse(text){
+const r=await fetch('api/parse',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({text,fields:state.placeholders,dateFormat:$('dateFmt').value})});
+const d=await r.json().catch(()=>({}));
+if(!r.ok)throw new Error(d.error||('HTTP '+r.status));
+return d;
+}
+$('aiBtn').addEventListener('click',async()=>{
+if(!state)return;
+const text=$('nlInput').value.trim();
+if(!text)return;
+const btn=$('aiBtn'),orig=btn.textContent;
+btn.disabled=true;btn.textContent='Parsing…';
+try{
+const d=await aiParse(text);
+let n=0;
+for(const[f,v]of Object.entries(d.values||{})){
+if(state.placeholders.includes(f)&&v){setValue(f,String(v));n++}
+}
+updateNamePreview();
+$('nlFeedback').innerHTML=n
+?'<span class="ok">✓ AI filled '+n+' field(s): '+Object.entries(d.values).map(([f,v])=>'<b>'+escXml(prettyName(f))+'</b> = '+escXml(String(v))).join(' · ')+'</span>'
+:'<span class="bad">The AI found nothing to fill — check the note mentions field values.</span>';
+}catch(err){
+$('nlFeedback').innerHTML='<span class="bad">AI parse failed: '+escXml(err.message||String(err))+'</span> <span class="hint">Applied the quick parser instead.</span>';
+applyNLText(text);
+}finally{btn.disabled=false;btn.textContent=orig}
+});
+
+/* generate */
+['namePattern','dateFmt'].forEach(id=>$(id).addEventListener('input',updateNamePreview));
+async function generateBlob(){
+const values=getValues();
+return fillTemplate(state,values,$('blankUnfilled').checked);
+}
+$('genBtn').addEventListener('click',async()=>{
+if(!state)return;
+const msg=$('genMsg');msg.className='';msg.textContent='Generating…';
+try{
+const values=getValues();
+const empty=state.placeholders.filter(f=>!values[f]);
+const blob=await generateBlob();
+const fname=buildFilename();
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;a.click();
+setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+localStorage.setItem('wirflow.namePattern',$('namePattern').value);
+if($('rememberVals').checked)localStorage.setItem('wirflow.vals.'+state.templateName,JSON.stringify(values));
+else localStorage.removeItem('wirflow.vals.'+state.templateName);
+msg.className='ok';
+msg.textContent='✓ Downloaded '+fname+(empty.length?' — note: '+empty.length+' field(s) left empty ('+empty.join(', ')+')':'');
+}catch(err){msg.className='bad';msg.textContent='Failed: '+(err.message||err)}
+});
+
+/* test hooks */
+window.__wf={buildSampleXlsx,loadFromBytes,applyNLText,generateBlob,parseZip,entryText,normalizeXml,parseNL,getState:()=>state,getValues,buildFilename};
+</script>
+</body>
+</html>

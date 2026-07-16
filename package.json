@@ -1,0 +1,12 @@
+{
+  "name": "wirflow",
+  "version": "0.1.0",
+  "private": true,
+  "description": "WIRflow — fill Excel submittal templates in plain English. Static site + zero-dependency LLM parsing backend.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

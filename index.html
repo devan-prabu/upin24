@@ -3,137 +3,173 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>UPin24 — Your Dream Website in 24 Hours</title>
-<meta name="description" content="Get a stunning, custom website built and delivered in under 24 hours. Personal care, guided handover, zero hosting costs.">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>WIRflow — From Finished Work to a Submitted WIR Package in Under 5 Minutes</title>
+<meta name="description" content="WIRflow is the preparation-side assistant for site engineers. Generate a complete, correctly-named, drawing-attached WIR package in under 5 minutes — no consultant login required.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F7F7FB;--text:#111827;--cta:#FF5733;--accent:#00D4FF;--border:#E5E7EB;--success:#10B981;--card:#fff;--card-shadow:0 4px 24px rgba(0,0,0,0.06);--card-hover:0 12px 40px rgba(0,0,0,0.10)}
+:root{--bg:#F7F8FA;--text:#0B1220;--muted:#5B6472;--cta:#F5A524;--cta-dark:#DB8B0F;--accent:#2563EB;--navy:#0F1E38;--border:#E2E5EA;--success:#16A34A;--danger:#DC2626;--card:#fff;--card-shadow:0 4px 24px rgba(15,30,56,0.06);--card-hover:0 14px 40px rgba(15,30,56,0.10)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
-h1,h2,h3,h4{font-family:'Poppins',sans-serif;font-weight:700;line-height:1.2}
-h1{font-size:clamp(36px,8vw,52px)}
-h2{font-size:clamp(28px,6vw,36px)}
-h3{font-size:clamp(20px,4vw,24px)}
-p{font-size:17px}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:700;line-height:1.15}
+h1{font-size:clamp(34px,7vw,54px)}
+h2{font-size:clamp(26px,5.5vw,36px)}
+h3{font-size:clamp(19px,4vw,22px)}
+p{font-size:16.5px}
 .container{max-width:1140px;margin:0 auto;padding:0 24px}
-section{padding:80px 0}
+section{padding:88px 0}
 
 /* Buttons */
-.btn{display:inline-block;font-family:'Poppins',sans-serif;font-weight:600;font-size:16px;text-transform:uppercase;letter-spacing:.5px;padding:16px 36px;border-radius:12px;border:none;cursor:pointer;transition:all .25s ease;text-decoration:none}
-.btn-cta{background:var(--cta);color:#fff;box-shadow:0 8px 25px rgba(255,87,51,.3)}
-.btn-cta:hover{background:#e04a2a;box-shadow:0 12px 35px rgba(255,87,51,.45);transform:translateY(-3px)}
+.btn{display:inline-block;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:.3px;padding:16px 34px;border-radius:10px;border:none;cursor:pointer;transition:all .25s ease;text-decoration:none}
+.btn-cta{background:var(--cta);color:#0B1220;box-shadow:0 8px 25px rgba(245,165,36,.35)}
+.btn-cta:hover{background:var(--cta-dark);box-shadow:0 12px 35px rgba(245,165,36,.5);transform:translateY(-3px)}
 .btn-outline{background:transparent;color:var(--text);border:2px solid var(--border)}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:#182b4d;transform:translateY(-3px)}
 
 /* Nav */
-nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(247,247,251,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px 0;transition:all .3s}
+nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(247,248,250,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:16px 0;transition:all .3s}
 .nav-inner{display:flex;justify-content:space-between;align-items:center}
-.logo{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.7rem;color:var(--cta);text-decoration:none}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.6rem;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:6px}
+.logo span{color:var(--cta)}
 .nav-links{display:flex;gap:2rem;align-items:center}
 .nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:15px;transition:color .2s}
 .nav-links a:hover{color:var(--accent)}
-.nav-links .btn{padding:10px 24px;font-size:14px}
+.nav-links .btn{padding:10px 22px;font-size:14px}
 .hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text)}
 
 /* Hero */
-.hero{min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden;background:linear-gradient(160deg,#F7F7FB 60%,#eef6ff 100%)}
-.hero::after{content:'';position:absolute;top:-100px;right:-150px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,87,51,.08) 0%,transparent 70%);border-radius:50%;z-index:0}
-.hero::before{content:'';position:absolute;bottom:-80px;left:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(0,212,255,.07) 0%,transparent 70%);border-radius:50%;z-index:0}
-.hero-content{text-align:center;position:relative;z-index:1;max-width:750px;margin:0 auto}
-.hero h1{margin-bottom:1.5rem}
-.hero h1 span{color:var(--cta)}
-.hero>div>p{color:#4b5563;margin-bottom:2.5rem;max-width:600px;margin-left:auto;margin-right:auto}
+.hero{min-height:96vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden;background:linear-gradient(160deg,#F7F8FA 55%,#eaf1fb 100%)}
+.hero::after{content:'';position:absolute;top:-100px;right:-150px;width:520px;height:520px;background:radial-gradient(circle,rgba(245,165,36,.10) 0%,transparent 70%);border-radius:50%;z-index:0}
+.hero::before{content:'';position:absolute;bottom:-90px;left:-110px;width:420px;height:420px;background:radial-gradient(circle,rgba(37,99,235,.08) 0%,transparent 70%);border-radius:50%;z-index:0}
+.hero-content{text-align:center;position:relative;z-index:1;max-width:800px;margin:0 auto}
+.hero h1{margin-bottom:1.4rem}
+.hero h1 span{color:var(--cta-dark)}
+.hero>div>p{color:var(--muted);margin-bottom:2.5rem;max-width:640px;margin-left:auto;margin-right:auto;font-size:18px}
 .hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
-.trust-strip{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:14px;color:#6b7280;font-weight:500}
+.trust-strip{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;font-size:14px;color:var(--muted);font-weight:500}
 .trust-strip span{display:flex;align-items:center;gap:6px}
 
 /* Marquee */
-.marquee-section{background:var(--cta);padding:14px 0;overflow:hidden;position:relative}
-.marquee-track{display:flex;gap:3rem;animation:marquee 22s linear infinite;white-space:nowrap}
-.marquee-track span{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:1rem}
-.marquee-track span::after{content:'✦';font-size:.7rem;opacity:.6}
+.marquee-section{background:var(--navy);padding:14px 0;overflow:hidden;position:relative}
+.marquee-track{display:flex;gap:3rem;animation:marquee 24s linear infinite;white-space:nowrap}
+.marquee-track span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:1rem;letter-spacing:.3px}
+.marquee-track span::after{content:'✦';font-size:.7rem;opacity:.5;color:var(--cta)}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 /* Section headers */
 .sec-header{text-align:center;margin-bottom:3.5rem}
-.sec-header p{color:#6b7280;max-width:550px;margin:.75rem auto 0}
-.sec-header .badge{display:inline-block;background:rgba(0,212,255,.1);color:var(--accent);font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:50px;margin-bottom:1rem}
+.sec-header p{color:var(--muted);max-width:580px;margin:.75rem auto 0}
+.sec-header .badge{display:inline-block;background:rgba(37,99,235,.08);color:var(--accent);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1.5px;padding:6px 16px;border-radius:50px;margin-bottom:1rem}
+
+/* Problem / comparison */
+.compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:3.5rem}
+.compare-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.25rem}
+.compare-card.old{border-top:4px solid var(--danger)}
+.compare-card.new{border-top:4px solid var(--success)}
+.compare-card h3{margin-bottom:.3rem}
+.compare-card .tag{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:1.25rem;display:block}
+.compare-list{list-style:none}
+.compare-list li{display:flex;gap:.65rem;padding:.55rem 0;font-size:15px;color:var(--text);border-bottom:1px solid var(--border)}
+.compare-list li:last-child{border-bottom:none}
+.compare-list li::before{flex-shrink:0;font-weight:700}
+.compare-card.old .compare-list li::before{content:'✕';color:var(--danger)}
+.compare-card.new .compare-list li::before{content:'✓';color:var(--success)}
+.tool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3rem}
+.tool-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.75rem}
+.tool-card h4{font-family:'Space Grotesk',sans-serif;font-size:1rem;margin-bottom:.5rem}
+.tool-card .built-for{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:.6rem}
+.tool-card p{font-size:14.5px;color:var(--muted)}
+.pull-quote{max-width:760px;margin:0 auto;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:clamp(20px,3vw,26px);font-weight:600;color:var(--navy);line-height:1.5;padding:2rem;border-left:4px solid var(--cta);border-right:4px solid var(--cta);background:#fff;border-radius:12px;box-shadow:var(--card-shadow)}
 
 /* Steps */
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;position:relative}
-.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem 2rem;text-align:center;transition:all .3s;position:relative}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;position:relative}
+.step-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.25rem 1.75rem;transition:all .3s;position:relative}
 .step-card:hover{box-shadow:var(--card-hover);transform:translateY(-4px)}
-.step-num{width:48px;height:48px;background:var(--cta);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;margin:0 auto 1.2rem}
-.step-card h3{margin-bottom:.8rem}
-.step-card p{color:#6b7280;font-size:15px}
+.step-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1rem}
+.step-num{width:44px;height:44px;background:var(--navy);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem}
+.step-time{font-size:12.5px;font-weight:700;color:var(--cta-dark);background:rgba(245,165,36,.12);padding:4px 12px;border-radius:20px}
+.step-card h3{margin-bottom:.6rem}
+.step-card p{color:var(--muted);font-size:14.5px}
+.flow-total{text-align:center;margin-top:2.5rem;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;color:var(--navy)}
+.flow-total span{color:var(--cta-dark)}
 
-/* Services */
-.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
-.svc-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
-.svc-card:hover{box-shadow:var(--card-hover);transform:translateY(-4px);border-color:var(--accent)}
-.svc-card .icon{font-size:2rem;margin-bottom:1rem}
-.svc-card h3{margin-bottom:.6rem;font-size:1.15rem}
-.svc-card p{color:#6b7280;font-size:15px}
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
+.feat-card:hover{box-shadow:var(--card-hover);transform:translateY(-4px);border-color:var(--accent)}
+.feat-card .icon{font-size:1.9rem;margin-bottom:1rem}
+.feat-card h3{margin-bottom:.6rem;font-size:1.1rem}
+.feat-card p{color:var(--muted);font-size:14.5px}
 
-/* Booking */
-.booking-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
-.calendar-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--card-shadow)}
-.cal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
-.days-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem}
-.day-col{text-align:center}
-.day-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:.75rem}
-.slot{padding:10px 4px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:500;margin-bottom:6px;transition:all .2s;cursor:pointer}
-.slot.available:hover{border-color:var(--cta);color:var(--cta);background:rgba(255,87,51,.04);transform:translateY(-1px)}
-.slot.available.selected{background:var(--cta);color:#fff;border-color:var(--cta);box-shadow:0 4px 12px rgba(255,87,51,.25)}
-.slot.booked{opacity:.3;cursor:not-allowed;text-decoration:line-through;background:#f9fafb}
-.booking-form-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;box-shadow:var(--card-shadow);display:none}
-.booking-form-card.active{display:block;animation:fadeUp .4s ease}
-.booking-form-card h3{margin-bottom:.5rem}
-#sel-time{display:inline-block;background:rgba(255,87,51,.08);color:var(--cta);font-weight:600;padding:4px 14px;border-radius:20px;font-size:14px;margin-bottom:1.5rem}
+/* Persona */
+.persona-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:3rem;align-items:center}
+.persona-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;box-shadow:var(--card-shadow)}
+.persona-row{display:grid;grid-template-columns:130px 1fr;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)}
+.persona-row:last-child{border-bottom:none}
+.persona-row .label{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--cta-dark)}
+.persona-row .value{font-size:15px;color:var(--text)}
+.persona-side{background:var(--navy);color:#fff;border-radius:20px;padding:2.5rem}
+.persona-side h3{color:#fff;margin-bottom:1rem}
+.persona-side .quote{font-size:1.15rem;font-style:italic;color:#cbd5e1;line-height:1.6;margin-bottom:1.5rem;border-left:3px solid var(--cta);padding-left:1rem}
+.non-user-list{list-style:none}
+.non-user-list li{font-size:14.5px;color:#9fb0c9;padding:.4rem 0;display:flex;gap:.5rem}
+.non-user-list li::before{content:'—';color:var(--cta)}
 
-/* Forms */
+/* Metrics */
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem 1.5rem;text-align:center}
+.metric-card .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(30px,4vw,40px);color:var(--accent);margin-bottom:.4rem}
+.metric-card .label{font-size:14.5px;color:var(--muted);font-weight:500}
+
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;align-items:stretch}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:2.5rem 2rem;display:flex;flex-direction:column;transition:all .3s}
+.price-card.featured{border:2px solid var(--cta);box-shadow:0 14px 40px rgba(245,165,36,.18);position:relative;transform:scale(1.03)}
+.price-card.featured .ribbon{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--cta);color:#0B1220;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.5px;padding:6px 16px;border-radius:20px}
+.price-card h3{margin-bottom:.3rem}
+.price-card .price{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:2.2rem;color:var(--navy);margin:1rem 0}
+.price-card .price small{font-size:14px;font-weight:500;color:var(--muted)}
+.price-list{list-style:none;margin:1.5rem 0 2rem;flex-grow:1}
+.price-list li{font-size:14.5px;color:var(--text);padding:.5rem 0;display:flex;gap:.6rem}
+.price-list li::before{content:'✓';color:var(--success);font-weight:700;flex-shrink:0}
+.pricing-note{text-align:center;max-width:680px;margin:3rem auto 0;color:var(--muted);font-size:15px;background:#fff;border:1px solid var(--border);border-radius:14px;padding:1.5rem 2rem}
+
+/* FAQ */
+.faq-wrap{max-width:760px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;transition:color .2s;gap:1rem}
+.faq-q:hover{color:var(--cta-dark)}
+.faq-icon{font-size:1.4rem;color:var(--cta-dark);transition:transform .3s;flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .35s,margin .3s;opacity:0;color:var(--muted);line-height:1.7}
+.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-item.open .faq-a{max-height:260px;opacity:1;margin-top:1rem}
+
+/* Waitlist */
+#waitlist{background:var(--navy)}
+#waitlist .sec-header h2,#waitlist .sec-header p{color:#fff}
+#waitlist .sec-header p{color:#b9c4d6}
+#waitlist .badge{background:rgba(245,165,36,.15);color:var(--cta)}
+.waitlist-wrap{max-width:720px;margin:0 auto;background:#fff;border-radius:20px;padding:3rem;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
 .form-group{margin-bottom:1.25rem}
 label{display:block;margin-bottom:6px;font-size:14px;font-weight:500;color:#374151}
 input,select,textarea{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:15px;color:var(--text);background:#fff;transition:all .2s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
-select option{color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
 ::placeholder{color:#9ca3af}
-.request-wrap{max-width:780px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:3rem;box-shadow:var(--card-shadow)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-
-/* Testimonials */
-.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
-.test-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
-.test-card:hover{box-shadow:var(--card-hover);transform:translateY(-3px)}
-.stars{color:#facc15;margin-bottom:1rem;font-size:1.1rem;letter-spacing:2px}
-.test-text{color:#4b5563;font-style:italic;margin-bottom:1.5rem;line-height:1.7}
-.reviewer{display:flex;align-items:center;gap:.75rem}
-.avatar{width:44px;height:44px;border-radius:50%;background:var(--cta);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem}
-.reviewer-info h4{font-size:.95rem;margin:0}
-.reviewer-info p{font-size:13px;color:#9ca3af;margin:0}
-
-/* FAQ */
-.faq-wrap{max-width:740px;margin:0 auto}
-.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
-.faq-item:first-child{border-top:1px solid var(--border)}
-.faq-q{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Poppins',sans-serif;font-weight:600;font-size:1.05rem;transition:color .2s;gap:1rem}
-.faq-q:hover{color:var(--cta)}
-.faq-icon{font-size:1.4rem;color:var(--cta);transition:transform .3s;flex-shrink:0}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease,opacity .35s,margin .3s;opacity:0;color:#6b7280;line-height:1.7}
-.faq-item.open .faq-icon{transform:rotate(45deg)}
-.faq-item.open .faq-a{max-height:200px;opacity:1;margin-top:1rem}
 
 /* Footer */
-footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
+footer{background:#08111F;color:#c9d2e0;padding:4rem 0 1.5rem;margin-top:2rem}
 .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
-.footer-brand .logo{color:#fff;font-size:1.6rem;display:inline-block;margin-bottom:.75rem}
-.footer-brand p{font-size:15px;color:#9ca3af;max-width:280px}
-.ft-col h4{color:#fff;margin-bottom:1rem;font-size:1rem}
+.footer-brand .logo{color:#fff;font-size:1.5rem;display:inline-flex;margin-bottom:.75rem}
+.footer-brand p{font-size:14.5px;color:#8b98ac;max-width:300px}
+.ft-col h4{color:#fff;margin-bottom:1rem;font-size:1rem;font-family:'Space Grotesk',sans-serif}
 .ft-links{display:flex;flex-direction:column;gap:.6rem}
-.ft-links a{color:#9ca3af;text-decoration:none;font-size:15px;transition:color .2s}
-.ft-links a:hover{color:var(--accent)}
-.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);font-size:14px;color:#6b7280}
+.ft-links a{color:#8b98ac;text-decoration:none;font-size:14.5px;transition:color .2s}
+.ft-links a:hover{color:var(--cta)}
+.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid rgba(255,255,255,.08);font-size:13.5px;color:#5c6a80}
 
 /* Animations */
 .anim{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
@@ -142,19 +178,18 @@ footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
 .hero-content{opacity:0;transform:translateY(28px);animation:fadeUp .9s ease forwards .2s}
 
 /* Responsive */
-@media(max-width:992px){.booking-wrap,.footer-grid{grid-template-columns:1fr}.steps-grid,.test-grid{grid-template-columns:1fr}}
+@media(max-width:992px){.compare-wrap,.tool-grid,.persona-wrap,.footer-grid{grid-template-columns:1fr}.steps-grid,.metrics-grid,.pricing-grid{grid-template-columns:1fr 1fr}.price-card.featured{transform:none}}
 @media(max-width:768px){
-.nav-links{position:fixed;top:65px;left:0;width:100%;background:rgba(247,247,251,.97);backdrop-filter:blur(14px);flex-direction:column;align-items:center;padding:2rem 0;gap:1.5rem;transform:translateY(-120%);transition:transform .4s cubic-bezier(.16,1,.3,1);border-bottom:1px solid var(--border)}
+.nav-links{position:fixed;top:65px;left:0;width:100%;background:rgba(247,248,250,.98);backdrop-filter:blur(14px);flex-direction:column;align-items:center;padding:2rem 0;gap:1.5rem;transform:translateY(-120%);transition:transform .4s cubic-bezier(.16,1,.3,1);border-bottom:1px solid var(--border)}
 .nav-links.open{transform:translateY(0)}
 .hamburger{display:block}
-.days-grid{grid-template-columns:1fr;gap:1.5rem}
-.day-col{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.day-name{grid-column:1/-1}
+.steps-grid,.metrics-grid,.pricing-grid{grid-template-columns:1fr}
 .form-grid{grid-template-columns:1fr!important}
 .trust-strip{flex-direction:column;align-items:center;gap:.5rem}
 .footer-grid{text-align:center}
 .footer-brand p{margin:0 auto}
 .ft-links{align-items:center}
+.waitlist-wrap{padding:2rem 1.5rem}
 }
 </style>
 </head>
@@ -162,14 +197,15 @@ footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
 
 <nav id="navbar">
 <div class="container nav-inner">
-<a href="#" class="logo">UPin24</a>
+<a href="#" class="logo">WIR<span>flow</span></a>
 <button class="hamburger" aria-label="Menu">☰</button>
 <div class="nav-links">
+<a href="#problem">The Problem</a>
 <a href="#how">How It Works</a>
-<a href="#services">Services</a>
-<a href="#testimonials">Reviews</a>
-<a href="#faq">FAQ</a>
-<a href="#book" class="btn btn-cta" style="padding:10px 22px;font-size:14px">BOOK NOW</a>
+<a href="#features">Features</a>
+<a href="#pricing">Pricing</a>
+<a href="tool.html">Template Tool</a>
+<a href="app/" class="btn btn-cta" style="padding:10px 22px;font-size:14px">LAUNCH APP</a>
 </div>
 </div>
 </nav>
@@ -178,15 +214,15 @@ footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
 <section class="hero" id="hero">
 <div class="container hero-content">
 <div class="trust-strip" style="margin-bottom:2rem">
-<span>⚡ Delivered in under 24hrs</span>
-<span>🤝 White-glove handover</span>
-<span>💸 No hidden hosting costs</span>
+<span>⏱ 5-minute WIR flow</span>
+<span>📐 Auto drawing matching</span>
+<span>🚫 No consultant login required</span>
 </div>
-<h1>Your Dream Website.<br><span>Built in 24 Hours.</span></h1>
-<p>Not just a website — a brand experience crafted with personal attention, handed to you with full guidance, ready to run for free.</p>
+<h1>From Finished Work to a<br><span>Submitted WIR Package.</span><br>In Under 5 Minutes.</h1>
+<p>WIRflow is the preparation-side assistant built for one person only — the site engineer. It turns 45 minutes of form-hunting, drawing-chasing, and folder-naming into a guided flow you finish before the crew even leaves the zone.</p>
 <div class="hero-btns">
-<a href="#book" class="btn btn-cta">Book Free Consultation</a>
-<a href="#request" class="btn btn-outline">Request Your Website</a>
+<a href="app/" class="btn btn-cta">Launch the App (Live Demo)</a>
+<a href="tool.html" class="btn btn-outline">Excel Template Tool</a>
 </div>
 </div>
 </section>
@@ -194,109 +230,199 @@ footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
 <!-- MARQUEE -->
 <div class="marquee-section">
 <div class="marquee-track">
-<span>Live in 24 Hours</span><span>Personal Care, Not Automation</span><span>Guided Handover Included</span><span>Built for Your Brand</span><span>Zero Cost to Run</span>
-<span>Live in 24 Hours</span><span>Personal Care, Not Automation</span><span>Guided Handover Included</span><span>Built for Your Brand</span><span>Zero Cost to Run</span>
+<span>5-Minute WIR Flow</span><span>Zero Consultant Login</span><span>Auto Drawing Matching</span><span>Audit-Ready Register</span><span>Your Data, Your Export</span>
+<span>5-Minute WIR Flow</span><span>Zero Consultant Login</span><span>Auto Drawing Matching</span><span>Audit-Ready Register</span><span>Your Data, Your Export</span>
 </div>
 </div>
+
+<!-- PROBLEM -->
+<section id="problem" class="container">
+<div class="sec-header anim"><span class="badge">The Problem</span><h2>Paperwork Built for the Job Nobody Designed For</h2><p>Every WIR should take five minutes. Today it takes an hour — and the contractor's crew doesn't wait.</p></div>
+
+<div class="compare-wrap">
+<div class="compare-card old anim">
+<span class="tag">30–60 MINUTES, AT A DESK</span>
+<h3>The Old Way</h3>
+<ul class="compare-list">
+<li>Find the correct blank WIR form — often the wrong revision</li>
+<li>Identify which shop drawings apply to this zone and activity</li>
+<li>Hunt those drawing PDFs down in a shared folder</li>
+<li>Fill every field manually, by memory of the last 200 WIRs</li>
+<li>Merge, name, and save with the correct naming convention</li>
+<li>Update the WIR register spreadsheet by hand</li>
+<li>Notify the QA manager and document controller separately</li>
+</ul>
+</div>
+<div class="compare-card new anim">
+<span class="tag">UNDER 5 MINUTES, FROM YOUR PHONE</span>
+<h3>The WIRflow Way</h3>
+<ul class="compare-list">
+<li>Tap "New WIR" — number, date, and your name are already filled</li>
+<li>Pick a zone — the right drawings auto-suggest themselves</li>
+<li>Confirm drawings — validated against the registry automatically</li>
+<li>Complete the activity checklist and attach site photos</li>
+<li>One tap generates the branded PDF, named and saved to the cloud</li>
+<li>Register updates itself — you never open Excel</li>
+</ul>
+</div>
+</div>
+
+<div class="tool-grid">
+<div class="tool-card anim"><h4>Enterprise Platforms</h4><div class="built-for">Procore, Aconex — built for document controllers</div><p>Heavy setup, expensive, and the WIR is just a generic form. Drawing attachment is still manual hunting.</p></div>
+<div class="tool-card anim"><h4>QA Checklist Apps</h4><div class="built-for">PlanRadar, Fieldwire — built for punch lists</div><p>No drawing auto-fetch, no formal WIR PDF output, no register automation.</p></div>
+<div class="tool-card anim"><h4>Excel + Shared Folders</h4><div class="built-for">The status quo — built for nobody</div><p>It just accumulated. Every step is manual, and naming and revision errors are guaranteed at scale.</p></div>
+</div>
+
+<p class="pull-quote anim">No product treats WIR preparation itself as the product. That's the entire opportunity.</p>
+</section>
 
 <!-- HOW IT WORKS -->
-<section id="how" class="container">
-<div class="sec-header anim"><span class="badge">Simple Process</span><h2>How It Works</h2><p>A seamless, hassle-free journey from brief to launch.</p></div>
+<section id="how" style="background:#fff">
+<div class="container">
+<div class="sec-header anim"><span class="badge">The 5-Minute Flow</span><h2>How It Works</h2><p>Six taps, from finished work to a submitted, audit-ready package.</p></div>
 <div class="steps-grid">
-<div class="step-card anim"><div class="step-num">1</div><h3>Book or Brief</h3><p>Book a free consultation or send your project brief online — no commitment needed.</p></div>
-<div class="step-card anim"><div class="step-num">2</div><h3>We Build It</h3><p>We build your custom, dynamic website after your confirmation — delivered in 24 hours.</p></div>
-<div class="step-card anim"><div class="step-num">3</div><h3>You Own It</h3><p>Handover with a live guided session — you're fully in control from day one.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">1</div><span class="step-time">10 sec</span></div><h3>Open &amp; New WIR</h3><p>Tap "New WIR." The number, date, project, and your name are already filled in.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">2</div><span class="step-time">30 sec</span></div><h3>Pick Zone &amp; Activity</h3><p>Drawings mapped to that zone auto-suggest, and superseded revisions get flagged instantly.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">3</div><span class="step-time">60 sec</span></div><h3>Confirm Drawings</h3><p>Add a location or grid reference. Every drawing number is validated against the registry.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">4</div><span class="step-time">90 sec</span></div><h3>Checklist &amp; Photos</h3><p>The correct activity checklist loads itself. Add remarks and site photos if you want.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">5</div><span class="step-time">60 sec</span></div><h3>Generate Package</h3><p>One tap fills the branded WIR PDF, bundles drawings, names the folder, saves to the cloud, and notifies your QA manager.</p></div>
+<div class="step-card anim"><div class="step-top"><div class="step-num">6</div><span class="step-time">10 sec</span></div><h3>Log Status</h3><p>When the consultant responds, tap Approved, Rejected, or Resubmit. A resubmission auto-creates a linked revision.</p></div>
+</div>
+<p class="flow-total anim">Total engineer effort: <span>under 5 minutes.</span> The old way: 30–60 minutes at a desk.</p>
 </div>
 </section>
 
-<!-- SERVICES -->
-<section id="services" style="background:#fff">
+<!-- FEATURES -->
+<section id="features">
 <div class="container">
-<div class="sec-header anim"><span class="badge">Why UPin24</span><h2>What Makes Us Different</h2><p>We redefine web creation. Fast, transparent, and completely yours.</p></div>
-<div class="services-grid">
-<div class="svc-card anim"><div class="icon">⚡</div><h3>24-Hour Delivery</h3><p>Dynamic, fully functional websites shipped fast — not templates, custom builds.</p></div>
-<div class="svc-card anim"><div class="icon">🎯</div><h3>Personal Touch</h3><p>Every site built around your brand's unique identity with meticulous care.</p></div>
-<div class="svc-card anim"><div class="icon">🤝</div><h3>Handheld Handover</h3><p>Live session to walk you through your code and how to run it confidently.</p></div>
-<div class="svc-card anim"><div class="icon">💰</div><h3>Run for Free</h3><p>Best practices and free tools shared so your site costs you nothing to maintain.</p></div>
-<div class="svc-card anim"><div class="icon">📬</div><h3>Book & Pay on Delivery</h3><p>No upfront risk. Confirm, receive, then pay — it's that simple.</p></div>
-<div class="svc-card anim"><div class="icon">🔒</div><h3>No Agents, Just Humans</h3><p>You get personal care, not automated pipelines or chatbots.</p></div>
-</div>
-</div>
-</section>
-
-<!-- BOOKING -->
-<section id="book">
-<div class="container">
-<div class="sec-header anim"><span class="badge">Limited Spots</span><h2>Book Your Free Consultation</h2><p>Pick a time that works for you and let's discuss your dream site.</p></div>
-<div class="booking-wrap">
-<div class="calendar-card anim">
-<div class="cal-head"><h3>Select a Time</h3><span style="font-size:13px;color:#9ca3af">This Week</span></div>
-<div class="days-grid" id="daysGrid"></div>
-</div>
-<div class="booking-form-card" id="bookingForm">
-<h3>Your Details</h3>
-<span id="sel-time"></span>
-<form id="consultForm">
-<input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
-<input type="hidden" name="subject" value="New Consultation Booking - UPin24">
-<input type="hidden" name="booking_time" id="bookTimeVal">
-<div class="form-group"><label>Name</label><input type="text" name="name" required placeholder="John Doe"></div>
-<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="john@example.com"></div>
-<div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="+1 234 567 8900"></div>
-<div class="form-group"><label>Brief Project Description</label><textarea name="description" rows="3" required placeholder="I need a portfolio site for..."></textarea></div>
-<button type="submit" class="btn btn-cta" style="width:100%">CONFIRM BOOKING</button>
-</form>
-</div>
+<div class="sec-header anim"><span class="badge">What's Included</span><h2>Everything a WIR Package Needs, Nothing It Doesn't</h2><p>Eight launch features. No feature ships that doesn't make the engineer's five minutes faster or safer.</p></div>
+<div class="features-grid">
+<div class="feat-card anim"><div class="icon">📝</div><h3>WIR Smart Form</h3><p>Mobile-first, fully validated data entry — no free text where a dropdown will do.</p></div>
+<div class="feat-card anim"><div class="icon">📐</div><h3>Drawing Registry</h3><p>Upload once; a new revision auto-supersedes the old. Search returns the latest in under 2 seconds.</p></div>
+<div class="feat-card anim"><div class="icon">🗺️</div><h3>Zone–Drawing Mapping</h3><p>Map drawings to a zone once. Pick the zone, and the right drawings suggest themselves.</p></div>
+<div class="feat-card anim"><div class="icon">📦</div><h3>One-Tap Package Generator</h3><p>Branded WIR PDF plus attached drawings, bundled and named to your project's convention.</p></div>
+<div class="feat-card anim"><div class="icon">📊</div><h3>Auto-Updated Register</h3><p>Every WIR appears live — number, date, zone, status, folder link. Excel export, one tap.</p></div>
+<div class="feat-card anim"><div class="icon">✅</div><h3>One-Tap Status Logging</h3><p>Approved, Rejected, or Resubmit — logged in under 15 seconds, photo included.</p></div>
+<div class="feat-card anim"><div class="icon">🔔</div><h3>Instant Notifications</h3><p>Your QA manager is notified the moment a package is generated or a status changes.</p></div>
+<div class="feat-card anim"><div class="icon">☁️</div><h3>Cloud Save + OneDrive Mirror</h3><p>Saved to built-in storage, optionally mirrored straight into your project's OneDrive or SharePoint folder.</p></div>
 </div>
 </div>
 </section>
 
-<!-- REQUEST FORM -->
-<section id="request" style="background:#fff">
+<!-- PERSONA -->
+<section id="persona" style="background:#fff">
 <div class="container">
-<div class="sec-header anim"><span class="badge">Get Started</span><h2>Tell Us What You Need</h2><p>Already know what you want? Fill out the brief and bypass the consultation.</p></div>
-<div class="request-wrap anim">
-<form id="requestForm">
-<input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
-<input type="hidden" name="subject" value="New Website Request - UPin24">
-<div class="form-grid">
-<div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="Jane Doe"></div>
-<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="jane@example.com"></div>
-<div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="+1 234 567 8900"></div>
-<div class="form-group"><label>Business / Brand Name</label><input type="text" name="business" placeholder="Acme Corp"></div>
-<div class="form-group" style="grid-column:1/-1"><label>Website Type</label><select name="type"><option>Portfolio</option><option>Business</option><option>E-commerce</option><option>Blog</option><option>Other</option></select></div>
-<div class="form-group" style="grid-column:1/-1"><label>Key Features Needed</label><textarea name="features" rows="4" required placeholder="E.g. gallery, contact form, dark mode..."></textarea></div>
-<div class="form-group"><label>Budget Range (Optional)</label><select name="budget"><option>Under $500</option><option>$500 – $1000</option><option>$1000 – $2000</option><option>$2000+</option></select></div>
-<div class="form-group"><label>How did you hear about us?</label><input type="text" name="source" placeholder="Social Media, Referral, etc."></div>
+<div class="sec-header anim"><span class="badge">Who It's For</span><h2>Built for the Site Engineer. Nobody Else Has to Log In.</h2><p>The consultant, the document controller, head office — none of them touch WIRflow. That's deliberate.</p></div>
+<div class="persona-wrap">
+<div class="persona-card anim">
+<h3 style="margin-bottom:1.5rem">The Site Engineer</h3>
+<div class="persona-row"><span class="label">Profile</span><span class="value">Civil / MEP / structural engineer, 24–40. Manages 1–3 zones. Raises 5–30 WIRs a month. Lives on WhatsApp, Excel, and OneDrive.</span></div>
+<div class="persona-row"><span class="label">Environment</span><span class="value">Hot, noisy, time-pressured site. Phone always in hand. Inconsistent signal in basements and remote zones.</span></div>
+<div class="persona-row"><span class="label">Trigger</span><span class="value">The foreman says "we're ready for inspection" — or "we're pouring at 2pm with or without you."</span></div>
+<div class="persona-row"><span class="label">Success</span><span class="value">WIR raised on time, drawings correct, QA manager off his back, and no late night doing paperwork.</span></div>
 </div>
-<button type="submit" class="btn btn-cta" style="width:100%;margin-top:.75rem">SUBMIT REQUEST</button>
-</form>
+<div class="persona-side anim">
+<h3>Explicitly Not for These People</h3>
+<p class="quote">"WIRflow lives entirely on the contractor's side of the fence."</p>
+<ul class="non-user-list">
+<li>The consultant / client rep — never logs in, ever</li>
+<li>The document controller — receives the output, works in their own system</li>
+<li>Head office — can view exported registers, no dedicated interface in v1</li>
+</ul>
+</div>
 </div>
 </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section id="testimonials">
+<!-- METRICS -->
+<section id="metrics">
 <div class="container">
-<div class="sec-header anim"><span class="badge">Social Proof</span><h2>What Our Clients Say</h2><p>Don't just take our word for it.</p></div>
-<div class="test-grid">
-<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"I couldn't believe they actually delivered my portfolio in under 24 hours. The design is spectacular and the handover call made it so easy to manage."</p><div class="reviewer"><div class="avatar">SJ</div><div class="reviewer-info"><h4>Sarah Jenkins</h4><p>Founder, Bloom Studio</p></div></div></div>
-<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"The zero hosting cost alone sold me, but the personal touch is what makes UPin24 different. Real humans helping my business grow."</p><div class="reviewer"><div class="avatar">MR</div><div class="reviewer-info"><h4>Mike Rodriguez</h4><p>E-commerce Owner</p></div></div></div>
-<div class="test-card anim"><div class="stars">★★★★★</div><p class="test-text">"Stunning design, super fast performance, and the code was beautifully structured. The live session empowered me to take control."</p><div class="reviewer"><div class="avatar">AT</div><div class="reviewer-info"><h4>Amanda Tran</h4><p>Tech Consultant</p></div></div></div>
+<div class="sec-header anim"><span class="badge">Why It Matters</span><h2>Built Around Numbers That Actually Move</h2><p>Targets we're building and measuring against from day one.</p></div>
+<div class="metrics-grid">
+<div class="metric-card anim"><div class="num">&lt;5 min</div><div class="label">Median time per WIR</div></div>
+<div class="metric-card anim"><div class="num">&gt;90%</div><div class="label">WIRs raised before the work front is ready</div></div>
+<div class="metric-card anim"><div class="num">&lt;5%</div><div class="label">Packages needing QA rework</div></div>
+<div class="metric-card anim"><div class="num">100%</div><div class="label">Register accuracy — it's automatic</div></div>
 </div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" style="background:#fff">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Pricing</span><h2>Affordable Enough to Approve on Petty Cash</h2><p>No procurement cycle. The whole team costs less than one day of one crew's idle time.</p></div>
+<div class="pricing-grid">
+<div class="price-card anim">
+<h3>Free</h3>
+<div class="price">$0</div>
+<ul class="price-list">
+<li>1 engineer, 1 project</li>
+<li>15 WIRs / month</li>
+<li>WIRflow branding on output</li>
+<li>The permanent free trial</li>
+</ul>
+<a href="#waitlist" class="btn btn-outline" style="text-align:center">Start Free</a>
+</div>
+<div class="price-card featured anim">
+<span class="ribbon">Most Popular</span>
+<h3>Team</h3>
+<div class="price">$12<small>/user/mo</small></div>
+<ul class="price-list">
+<li>Everything in Free, unlimited WIRs</li>
+<li>Company branding on packages</li>
+<li>OneDrive / SharePoint mirror</li>
+<li>Register export</li>
+<li>Up to 15 users per project</li>
+</ul>
+<a href="#waitlist" class="btn btn-cta" style="text-align:center">Join the Waitlist</a>
+</div>
+<div class="price-card anim">
+<h3>Project License</h3>
+<div class="price">$149<small>/project/mo</small></div>
+<ul class="price-list">
+<li>Unlimited users, one project</li>
+<li>Budgeted the way contractors actually budget</li>
+<li>Everything in Team</li>
+</ul>
+<a href="#waitlist" class="btn btn-outline" style="text-align:center">Talk to Us</a>
+</div>
+</div>
+<p class="pricing-note anim">A 10-engineer team on Team tier costs $120/month — roughly $1,440/year. Prevent a single covered-up-without-inspection event, and it has paid for itself many times over.</p>
 </div>
 </section>
 
 <!-- FAQ -->
-<section id="faq" style="background:#fff">
+<section id="faq">
 <div class="container">
 <div class="sec-header anim"><span class="badge">FAQ</span><h2>Frequently Asked Questions</h2></div>
 <div class="faq-wrap anim">
-<div class="faq-item"><div class="faq-q"><span>How can you build a website in 24 hours?</span><span class="faq-icon">+</span></div><div class="faq-a">We leverage highly optimized workflows, custom foundations, and direct personal execution to rapidly construct and finalize your website without unnecessary delays or bureaucracy.</div></div>
-<div class="faq-item"><div class="faq-q"><span>Do I need any technical knowledge to manage my site?</span><span class="faq-icon">+</span></div><div class="faq-a">Not at all! Our handheld handover session walks you through exactly how to edit, update, and manage your website with confidence.</div></div>
-<div class="faq-item"><div class="faq-q"><span>What does the handheld session include?</span><span class="faq-icon">+</span></div><div class="faq-a">A live screen-share call where we tour your new website, show you how everything works, and make sure you feel 100% comfortable running it on your own.</div></div>
-<div class="faq-item"><div class="faq-q"><span>Are there any hidden monthly costs?</span><span class="faq-icon">+</span></div><div class="faq-a">No! We deliver lightweight, fast sites using tools that cost zero dollars a month to host and run. No surprise invoices from us — ever.</div></div>
-<div class="faq-item"><div class="faq-q"><span>When do I pay?</span><span class="faq-icon">+</span></div><div class="faq-a">You only pay when the website is delivered and you are completely satisfied. Zero upfront risk — that's our promise.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Do consultants or clients need to use WIRflow?</span><span class="faq-icon">+</span></div><div class="faq-a">No. WIRflow lives entirely on your side of the fence. The consultant never logs in, never trains on it, and never approves its existence. The output is a perfect package delivered through whatever channel your project already uses.</div></div>
+<div class="faq-item"><div class="faq-q"><span>What happens after I submit a package?</span><span class="faq-icon">+</span></div><div class="faq-a">When the consultant responds outside the system, you tap Approved, Rejected, or Resubmit — optionally with a photo of the signed copy. A resubmission automatically creates a linked revision.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Does WIRflow replace our document control system?</span><span class="faq-icon">+</span></div><div class="faq-a">No — it feeds it. WIRflow generates the perfect, audit-ready package; your document controller's platform stays the official record channel.</div></div>
+<div class="faq-item"><div class="faq-q"><span>What if I have no signal on site?</span><span class="faq-icon">+</span></div><div class="faq-a">Offline drafts are a top fast-follower priority — the form works with no signal, and the package generates the moment connectivity returns.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Who owns the data?</span><span class="faq-icon">+</span></div><div class="faq-a">You do. A full export of your register and every package as a ZIP is available at any time — a deliberate answer to enterprise lock-in.</div></div>
+<div class="faq-item"><div class="faq-q"><span>Is my company's WIR template supported?</span><span class="faq-icon">+</span></div><div class="faq-a">Yes — template upload with merge-field mapping is a day-one capability, not a customization service. A new project is usable in under a working day, self-service.</div></div>
+</div>
+</div>
+</section>
+
+<!-- WAITLIST -->
+<section id="waitlist">
+<div class="container">
+<div class="sec-header anim"><span class="badge">Early Access</span><h2>Be the First Engineer on Your Site to Never Miss a WIR</h2><p>WIRflow is in build. Join the waitlist and we'll bring the pilot to your project first.</p></div>
+<div class="waitlist-wrap anim">
+<form id="waitlistForm">
+<input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+<input type="hidden" name="subject" value="New WIRflow Waitlist Signup">
+<div class="form-grid">
+<div class="form-group"><label>Full Name</label><input type="text" name="name" required placeholder="Jane Doe"></div>
+<div class="form-group"><label>Email</label><input type="email" name="email" required placeholder="jane@example.com"></div>
+<div class="form-group"><label>Role</label><select name="role"><option>Site Engineer</option><option>QA / QC Manager</option><option>Project Manager</option><option>Other</option></select></div>
+<div class="form-group"><label>Company / Project Name</label><input type="text" name="company" placeholder="Acme Construction"></div>
+</div>
+<div class="form-group"><label>How many WIRs does your team raise per month? (Optional)</label><input type="text" name="volume" placeholder="E.g. around 20"></div>
+<button type="submit" class="btn btn-cta" style="width:100%">JOIN THE WAITLIST</button>
+</form>
 </div>
 </div>
 </section>
@@ -305,11 +431,11 @@ footer{background:#111827;color:#d1d5db;padding:4rem 0 1.5rem;margin-top:2rem}
 <footer>
 <div class="container">
 <div class="footer-grid">
-<div class="footer-brand"><a href="#" class="logo">UPin24</a><p>Your Dream Website. Built in 24 Hours. Run for free, forever.</p></div>
-<div class="ft-col"><h4>Quick Links</h4><div class="ft-links"><a href="#how">How It Works</a><a href="#services">Services</a><a href="#book">Book Appointment</a><a href="#request">Request Website</a></div></div>
-<div class="ft-col"><h4>Contact</h4><div class="ft-links"><a href="mailto:trprabudevan@gmail.com">trprabudevan@gmail.com</a><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div></div>
+<div class="footer-brand"><a href="#" class="logo">WIR<span style="color:var(--cta)">flow</span></a><p>From finished work to a submitted WIR package — in under 5 minutes.</p></div>
+<div class="ft-col"><h4>Quick Links</h4><div class="ft-links"><a href="#problem">The Problem</a><a href="#how">How It Works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="tool.html">Template Tool (Beta)</a></div></div>
+<div class="ft-col"><h4>Contact</h4><div class="ft-links"><a href="mailto:trprabudevan@gmail.com">trprabudevan@gmail.com</a><a href="#">LinkedIn</a><a href="#">X / Twitter</a></div></div>
 </div>
-<div class="footer-bottom">&copy; 2025 UPin24. All rights reserved.</div>
+<div class="footer-bottom">&copy; 2026 WIRflow. All rights reserved.</div>
 </div>
 </footer>
 
@@ -323,26 +449,6 @@ document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',
 const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('show');obs.unobserve(en.target)}})},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.anim').forEach((el,i)=>{el.style.transitionDelay=`${(i%4)*.08}s`;obs.observe(el)});
 
-// Booking calendar — seeded randomness
-function sRand(s){let x=Math.sin(s++)*10000;return x-Math.floor(x)}
-const dNames=['Monday','Tuesday','Wednesday','Thursday','Friday'],tSlots=['10:00 AM','11:00 AM','12:00 PM','2:00 PM','3:00 PM','4:00 PM'];
-const td=new Date(),seed=td.getFullYear()*10000+(td.getMonth()+1)*100+td.getDate();
-const dg=document.getElementById('daysGrid');
-dNames.forEach((d,di)=>{
-const col=document.createElement('div');col.className='day-col';
-const dn=document.createElement('div');dn.className='day-name';dn.textContent=d;col.appendChild(dn);
-const ds=seed+di,nb=Math.floor(sRand(ds)*2)+2;let av=[0,1,2,3,4,5],bk=[];
-for(let i=0;i<nb;i++){const r=Math.floor(sRand(ds+i*10)*av.length);bk.push(av[r]);av.splice(r,1)}
-tSlots.forEach((t,ti)=>{
-const s=document.createElement('div');s.className=`slot ${bk.includes(ti)?'booked':'available'}`;s.textContent=t;
-if(!bk.includes(ti))s.addEventListener('click',()=>{
-document.querySelectorAll('.slot').forEach(x=>x.classList.remove('selected'));s.classList.add('selected');
-const info=`${d} at ${t}`;document.getElementById('sel-time').textContent='📅 '+info;document.getElementById('bookTimeVal').value=info;
-const bf=document.getElementById('bookingForm');bf.classList.add('active');
-if(window.innerWidth<992)setTimeout(()=>bf.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
-});
-col.appendChild(s)});dg.appendChild(col)});
-
 // FAQ
 document.querySelectorAll('.faq-item').forEach(it=>{it.querySelector('.faq-q').addEventListener('click',()=>{
 const wasOpen=it.classList.contains('open');
@@ -350,16 +456,14 @@ document.querySelectorAll('.faq-item').forEach(x=>{x.classList.remove('open');x.
 if(!wasOpen){it.classList.add('open');it.querySelector('.faq-icon').textContent='−'}
 })});
 
-// Form submissions
-function handleForm(form,successHTML){
-form.addEventListener('submit',function(e){e.preventDefault();
+// Waitlist form submission
+const wf=document.getElementById('waitlistForm');
+wf.addEventListener('submit',function(e){e.preventDefault();
 const btn=this.querySelector('button[type="submit"]'),orig=btn.textContent;btn.textContent='SENDING...';btn.disabled=true;btn.style.opacity='.7';
-fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(form)}).then(r=>r.json()).then(d=>{
-if(d.success){form.closest('.booking-form-card,.request-wrap').innerHTML=successHTML}else throw 0
+fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(wf)}).then(r=>r.json()).then(d=>{
+if(d.success){wf.closest('.waitlist-wrap').innerHTML='<div style="text-align:center;padding:2.5rem 0"><div style="font-size:3rem;margin-bottom:1rem">🚧</div><h3 style="color:var(--success);margin-bottom:.5rem">You\'re on the list!</h3><p style="color:#6b7280">We\'ll reach out as pilot slots open up.</p></div>'}else throw 0
 }).catch(()=>{btn.textContent=orig;btn.disabled=false;btn.style.opacity='1';alert('Submission failed. Please check your access key or try again.')})
-})}
-handleForm(document.getElementById('consultForm'),'<div style="text-align:center;padding:2.5rem 0"><div style="font-size:3rem;margin-bottom:1rem">✨</div><h3 style="color:var(--success);margin-bottom:.5rem">Your slot is confirmed!</h3><p style="color:#6b7280">Expect a confirmation email shortly.</p></div>');
-handleForm(document.getElementById('requestForm'),'<div style="text-align:center;padding:3rem 0"><div style="font-size:3rem;margin-bottom:1rem">🚀</div><h3 style="color:var(--success);margin-bottom:.75rem">Request Received!</h3><p style="color:#6b7280;max-width:380px;margin:0 auto">Thanks! We\'ll review your brief and reach out within a few hours.</p></div>');
+});
 </script>
 </body>
 </html>
