@@ -97,3 +97,7 @@ The server validates input sizes, rate-limits per IP (20/min default), never exp
 ## Preparing a template (one-time)
 
 Open your existing Excel form and type a marker like `{{wir_no}}`, `{{date}}`, `{{zone}}` into each cell you edit every time. Save it — that's your master template. The tool detects the markers automatically and replaces only them.
+
+## Zero-server demo (`demo.html`)
+
+`demo.html` is the entire app compiled into one file with the database running **in the browser** (localStorage). Host it anywhere static — GitHub Pages, Netlify — or just open it. Same rules, same seed data; "Reset demo data" in the banner restores the seed. Real multi-user deployments should use the Node server instead.

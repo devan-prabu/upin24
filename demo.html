@@ -1,0 +1,1809 @@
+<title>WIRflow — Live Demo</title>
+<style>:root{--bg:#F4F6F9;--text:#0B1220;--muted:#5B6472;--cta:#F5A524;--cta-dark:#DB8B0F;--accent:#2563EB;--navy:#0F1E38;--border:#E2E5EA;--success:#16A34A;--danger:#DC2626;--warn:#D97706;--card:#fff;--shadow:0 2px 12px rgba(15,30,56,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none !important}
+body{font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14.5px;line-height:1.5}
+h1,h2,h3{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;line-height:1.2}
+a{color:var(--accent)}
+button{font-family:inherit}
+
+/* ---- login ---- */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(150deg,#0F1E38 0%,#1a3157 100%);padding:20px}
+.login-card{background:#fff;border-radius:18px;padding:2.6rem;width:100%;max-width:400px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.logo-big{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:2rem;color:var(--navy)}
+.logo-big span,.logo span{color:var(--cta)}
+.login-sub{color:var(--muted);margin:.3rem 0 1.6rem}
+.login-card label{display:block;font-size:13px;font-weight:600;margin:12px 0 4px;color:#374151}
+.login-card input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-size:15px}
+.login-error{color:var(--danger);font-size:13.5px;margin-top:10px;min-height:18px}
+.demo-creds{margin-top:1.4rem;font-size:12.5px;color:var(--muted);background:#f6f8fb;border-radius:10px;padding:10px 12px;line-height:1.7}
+.demo-creds code{background:#e8ecf2;border-radius:4px;padding:1px 5px}
+
+/* ---- shell ---- */
+.shell{display:grid;grid-template-columns:228px 1fr;min-height:100vh}
+.sidebar{background:var(--navy);color:#c7d2e2;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar .logo{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:1.35rem;color:#fff;padding:18px 18px 10px}
+.proj-select{padding:0 14px 12px}
+.proj-select select{width:100%;background:#1a2c4d;color:#fff;border:1px solid #2b3f63;border-radius:8px;padding:8px;font-size:13px}
+#sideNav{display:flex;flex-direction:column;padding:0 10px;flex:1}
+#sideNav a{color:#c7d2e2;text-decoration:none;padding:7.5px 10px;border-radius:8px;font-size:13.5px;margin:1px 0}
+#sideNav a:hover{background:#1a2c4d;color:#fff}
+#sideNav a.active{background:var(--cta);color:#0B1220;font-weight:600}
+.nav-group{font-size:10.5px;text-transform:uppercase;letter-spacing:1.4px;color:#5f7196;padding:14px 10px 4px}
+.side-foot{padding:14px 18px;font-size:12.5px;border-top:1px solid #22355a;color:#8fa3c2}
+.side-foot a{color:#8fa3c2}
+.role-chip{background:#22355a;border-radius:10px;padding:1px 8px;font-size:10.5px;color:#cfe0f5}
+
+/* ---- topbar ---- */
+.main{min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:1px solid var(--border);padding:12px 24px;position:sticky;top:0;z-index:50}
+.page-title{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:1.15rem}
+.bell-wrap{position:relative}
+.bell{background:none;border:1px solid var(--border);border-radius:10px;font-size:1.05rem;padding:6px 10px;cursor:pointer}
+.bell-count{position:absolute;top:-6px;right:-6px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:700;border-radius:10px;padding:1px 6px}
+.bell-panel{position:absolute;right:0;top:44px;width:360px;max-height:430px;overflow-y:auto;background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 16px 50px rgba(15,30,56,.18);z-index:100}
+.bell-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border)}
+.notif{padding:10px 14px;border-bottom:1px solid #f0f2f5;font-size:13px}
+.notif.unread{background:#f4f8ff}
+.notif .ntype{font-weight:700;font-size:11px;letter-spacing:.5px}
+.notif .ntime{color:#9aa3af;font-size:11.5px}
+.linkbtn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:12.5px}
+
+/* ---- view / components ---- */
+.view{padding:22px 24px 60px;max-width:1240px}
+.grid{display:grid;gap:16px}
+.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:repeat(3,1fr)}.cols-4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.card h3{font-size:1rem;margin-bottom:10px}
+.stat{text-align:center;padding:16px 10px}
+.stat .n{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:1.9rem}
+.stat .l{color:var(--muted);font-size:12.5px}
+.stat.red .n{color:var(--danger)}.stat.green .n{color:var(--success)}.stat.blue .n{color:var(--accent)}.stat.amber .n{color:var(--warn)}
+table.tbl{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+.tbl th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border-bottom:2px solid var(--border);padding:8px 10px;white-space:nowrap}
+.tbl td{padding:9px 10px;border-bottom:1px solid #eef0f4;vertical-align:top}
+.tbl tr.click{cursor:pointer}
+.tbl tr.click:hover{background:#f6f9ff}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.b-gray{background:#eceef2;color:#4b5563}.b-blue{background:#dbeafe;color:#1d4ed8}.b-indigo{background:#e0e7ff;color:#4338ca}
+.b-green{background:#dcfce7;color:#15803d}.b-red{background:#fee2e2;color:#b91c1c}.b-amber{background:#fef3c7;color:#b45309}
+.btn{display:inline-block;font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:13.5px;padding:9px 18px;border-radius:9px;border:none;cursor:pointer;text-decoration:none;transition:all .15s}
+.btn-cta{background:var(--cta);color:#0B1220}.btn-cta:hover{background:var(--cta-dark)}
+.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:#1a2c4d}
+.btn-outline{background:#fff;color:var(--text);border:1.5px solid var(--border)}.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12.5px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12.5px;font-weight:600;margin-bottom:4px;color:#374151}
+.field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--border);border-radius:9px;font-family:inherit;font-size:14px;background:#fff}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:#eef2f8;border:1px solid var(--border);border-radius:16px;padding:3px 11px;font-size:12.5px;cursor:pointer}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip .x{margin-left:6px;font-weight:700}
+.alert{border-radius:10px;padding:11px 14px;font-size:13.5px;margin:10px 0}
+.a-warn{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.a-red{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.a-green{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.a-blue{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe}
+.muted{color:var(--muted)}.small{font-size:12.5px}
+.pagehead{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.pagehead h2{font-size:1.3rem}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters select,.filters input{padding:7px 9px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#fff}
+
+/* matrix */
+.matrix-wrap{overflow-x:auto}
+.matrix{border-collapse:collapse;min-width:760px;width:100%}
+.matrix th{background:var(--navy);color:#fff;padding:9px 10px;font-size:12px;text-align:left;position:sticky;top:0}
+.matrix td{border:1px solid var(--border);padding:7px 8px;background:#fff;min-width:105px}
+.matrix td.zone-cell{font-weight:600;background:#f6f8fb;min-width:150px}
+.mcell{display:block;text-align:center;border-radius:8px;padding:7px 4px;font-size:11.5px;font-weight:700;cursor:pointer;text-decoration:none}
+.mc-na{background:#f3f4f6;color:#9ca3af;cursor:default}
+.mc-not{background:#e5e7eb;color:#4b5563}
+.mc-draft{background:#fef9c3;color:#854d0e}
+.mc-sub{background:#dbeafe;color:#1d4ed8}
+.mc-rev{background:#e0e7ff;color:#4338ca}
+.mc-ok{background:#bbf7d0;color:#166534}
+.mc-rej{background:#fecaca;color:#991b1b}
+.mc-tr{background:#fed7aa;color:#9a3412}
+.prog-outer{background:#e9edf3;border-radius:8px;height:8px;overflow:hidden;margin-top:5px}
+.prog-inner{background:var(--success);height:100%}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;font-size:12px}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* timeline */
+.timeline{border-left:2px solid var(--border);margin:8px 0 8px 8px;padding-left:16px}
+.tl-item{position:relative;margin-bottom:12px;font-size:13px}
+.tl-item::before{content:'';position:absolute;left:-22px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.pass-big{font-family:'Avenir Next','Segoe UI',Verdana,system-ui,sans-serif;font-weight:700;font-size:1.6rem}
+.pass-big.pass{color:var(--success)}.pass-big.fail{color:var(--danger)}
+
+@media(max-width:900px){
+.shell{grid-template-columns:1fr}
+.sidebar{position:fixed;z-index:200;width:230px;transform:translateX(-100%);transition:transform .3s}
+.sidebar.open{transform:none}
+.cols-2,.cols-3,.cols-4,.frow{grid-template-columns:1fr}
+.view{padding:16px 12px 60px}
+}
+
+.demo-banner{background:#0F1E38;color:#cfe0f5;font-size:12.5px;text-align:center;padding:6px 10px}
+.demo-banner b{color:#F5A524}
+.demo-banner a{color:#9fc3f7}
+</style>
+<div class="demo-banner"><b>DEMO MODE</b> — full WIRflow app with the database running in your browser (saved locally). <a href="#" onclick="wfDemoReset();return false">Reset demo data</a></div>
+
+
+<!-- Login screen -->
+<div id="loginScreen" class="login-wrap" hidden>
+<div class="login-card">
+<div class="logo-big">WIR<span>flow</span></div>
+<p class="login-sub">Work Inspection Request Automation</p>
+<form id="loginForm">
+<label>Email</label>
+<input type="email" id="loginEmail" required placeholder="engineer@wirflow.app" autocomplete="username">
+<label>Password</label>
+<input type="password" id="loginPassword" required placeholder="demo123" autocomplete="current-password">
+<button class="btn btn-cta" type="submit" style="width:100%;margin-top:14px">Sign In</button>
+<div id="loginError" class="login-error"></div>
+</form>
+<div class="demo-creds">
+<b>Demo accounts</b> (password <code>demo123</code>):<br>
+engineer@wirflow.app · qa@wirflow.app · admin@wirflow.app
+</div>
+</div>
+</div>
+
+<!-- App shell -->
+<div id="appShell" class="shell" hidden>
+<aside class="sidebar">
+<div class="logo">WIR<span>flow</span></div>
+<div class="proj-select"><select id="projectSelect"></select></div>
+<nav id="sideNav">
+<a href="#/dashboard" data-nav="dashboard">Dashboard</a>
+<a href="#/matrix" data-nav="matrix">IR Matrix</a>
+<div class="nav-group">QA Workflow</div>
+<a href="#/wirs" data-nav="wirs">WIRs</a>
+<a href="#/wir/new" data-nav="wir-new">+ New WIR</a>
+<a href="#/trs" data-nav="trs">Test Requests</a>
+<a href="#/results" data-nav="results">Results Desk</a>
+<a href="#/lab-matrix" data-nav="lab-matrix">Lab Matrix</a>
+<a href="#/fdt" data-nav="fdt">FDT Tracker</a>
+<a href="#/ncrs" data-nav="ncrs">NCRs</a>
+<div class="nav-group">Library</div>
+<a href="#/drawings" data-nav="drawings">Shop Drawings</a>
+<a href="#/zones" data-nav="zones">Zones</a>
+<a href="#/programme" data-nav="programme">Programme</a>
+<a href="#/method-statements" data-nav="ms">Method Statements</a>
+<div class="nav-group">Output</div>
+<a href="#/handover" data-nav="handover">Handover Pack</a>
+<a href="#/team" data-nav="team">Team</a>
+</nav>
+<div class="side-foot"><span id="userName"></span> <span id="userRole" class="role-chip"></span><br><a href="#" id="logoutLink">Sign out</a></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+<div id="pageTitle" class="page-title">Dashboard</div>
+<div class="topbar-right">
+<div class="bell-wrap">
+<button id="bellBtn" class="bell">🔔<span id="bellCount" class="bell-count" hidden></span></button>
+<div id="bellPanel" class="bell-panel" hidden>
+<div class="bell-head"><b>Notifications</b><button id="markAllRead" class="linkbtn">mark all read</button></div>
+<div id="bellList"></div>
+</div>
+</div>
+</div>
+</header>
+<div id="view" class="view"></div>
+</main>
+</div>
+
+
+<script>/* WIRflow in-browser backend (demo mode).
+ * Implements the same routes and business rules as api.js against an
+ * in-memory store persisted to localStorage. Installed as a fetch
+ * interceptor so app.js runs unmodified. */
+(function () {
+  'use strict';
+  const LS_KEY = 'wfdemo_db_v2';
+  const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).slice(2) + Date.now());
+  const now = () => new Date().toISOString();
+  const today = () => new Date().toISOString().slice(0, 10);
+  const day = (offset) => new Date(Date.now() + offset * 86400000).toISOString().slice(0, 10);
+
+  const SPEC_TABLE = {
+    'Concrete Cube C25': { limit: 25, unit: 'MPa', rule: 'min' },
+    'Concrete Cube C30': { limit: 30, unit: 'MPa', rule: 'min' },
+    'Concrete Cube C40': { limit: 40, unit: 'MPa', rule: 'min' },
+    'FDT': { limit: 95, unit: '% MDD', rule: 'min', note: 'roads: 98' },
+    'Steel Tensile': { limit: 500, unit: 'MPa', rule: 'min' },
+    'Slump': { limit: 25, unit: 'mm', rule: 'tolerance', target: 150, note: 'per mix design ±25mm' },
+    'Asphalt Core': { limit: 93, unit: '% density', rule: 'min' },
+    'Other': { limit: null, unit: '', rule: 'min' },
+  };
+  const ACTIVITY_TYPES = ['Rebar', 'Formwork', 'Concrete Pour', 'MEP Rough-in', 'Backfill', 'Finishes'];
+  const TEST_TYPES = Object.keys(SPEC_TABLE);
+  const LAB_COLS = ['Slump', '7-day Cube', '28-day Cube', 'FDT', 'Steel Tensile', 'Asphalt Core'];
+  const FDT_AREA = 250;
+  const ROLES = ['Engineer', 'QA', 'DocControl', 'Admin'];
+
+  /* ---------- store ---------- */
+  let DB = null;
+  function save() { try { localStorage.setItem(LS_KEY, JSON.stringify(DB)); } catch (e) {} }
+  function seed() {
+    DB = { users: [], sessions: [], projects: [], project_members: [], zones: [], activities: [], shop_drawings: [], zone_drawings: [], wirs: [], wir_drawings: [], wir_comments: [], test_requests: [], test_results: [], ncrs: [], notifications: [], method_statements: [] };
+    const t = now();
+    const mkUser = (email, name, role) => { const id = uuid(); DB.users.push({ id, email, name, role, password: 'demo123', created_at: t }); return id; };
+    const admin = mkUser('admin@wirflow.app', 'Aisha Rahman', 'Admin');
+    const qa = mkUser('qa@wirflow.app', 'Karim Haddad', 'QA');
+    const eng = mkUser('engineer@wirflow.app', 'Devan Prabu', 'Engineer');
+    const doc = mkUser('doc@wirflow.app', 'Marta Silva', 'DocControl');
+    const project = uuid();
+    DB.projects.push({ id: project, name: 'Marina Heights Tower', location: 'Dubai Marina, UAE', client: 'Emerald Developments LLC', contract_no: 'C-2026-114', start_date: '2026-05-01', created_by: admin, created_at: t });
+    for (const [u, r] of [[admin, 'Admin'], [qa, 'QA'], [eng, 'Engineer'], [doc, 'DocControl']]) DB.project_members.push({ id: uuid(), project_id: project, user_id: u, role: r });
+    const mkZone = (name, grid, desc) => { const id = uuid(); DB.zones.push({ id, project_id: project, name, grid_ref: grid, description: desc, floor_plan_url: null, created_by: qa }); return id; };
+    const z1 = mkZone('Z01 - Basement', 'A1-D4', 'Basement raft and retaining walls');
+    const z2 = mkZone('Z02 - Ground Floor', 'A1-F6', 'Ground floor slab and columns');
+    const z3 = mkZone('Z03 - Level 1', 'A1-F6', 'Level 1 slab, columns, MEP risers');
+    const z4 = mkZone('Z04 - Podium', 'G1-K4', 'Podium deck and landscape backfill');
+    const mkDrawing = (num, title, rev, disc, latest) => { const id = uuid(); DB.shop_drawings.push({ id, project_id: project, drawing_number: num, title, revision: rev, discipline: disc, file_url: null, is_latest: latest === undefined ? 1 : latest, created_at: t }); return id; };
+    const d1 = mkDrawing('SD-STR-001', 'Basement Raft Reinforcement Layout', 'Rev 2', 'Structural');
+    mkDrawing('SD-STR-001', 'Basement Raft Reinforcement Layout', 'Rev 1', 'Structural', 0);
+    const d2 = mkDrawing('SD-STR-014', 'GF Slab Reinforcement Details', 'Rev 1', 'Structural');
+    const d3 = mkDrawing('SD-STR-022', 'L1 Column Schedule', 'Rev 0', 'Structural');
+    const d4 = mkDrawing('SD-MEP-005', 'GF Underslab Drainage Layout', 'Rev 1', 'MEP');
+    const d5 = mkDrawing('SD-CIV-003', 'Podium Backfill Levels & Compaction Plan', 'Rev 0', 'Civil');
+    for (const [z, d] of [[z1, d1], [z2, d2], [z2, d4], [z3, d3], [z4, d5]]) DB.zone_drawings.push({ id: uuid(), zone_id: z, drawing_id: d });
+    const mkAct = (zone, name, type, s, e) => { const id = uuid(); DB.activities.push({ id, project_id: project, zone_id: zone, name, type, planned_start: s, planned_end: e }); return id; };
+    const a1 = mkAct(z1, 'Raft reinforcement fixing', 'Rebar', day(-30), day(-24));
+    const a2 = mkAct(z1, 'Raft concrete pour', 'Concrete Pour', day(-22), day(-21));
+    mkAct(z2, 'GF slab formwork', 'Formwork', day(-10), day(-5));
+    const a4 = mkAct(z2, 'GF slab reinforcement', 'Rebar', day(-6), day(-1));
+    mkAct(z2, 'GF slab pour', 'Concrete Pour', day(1), day(2));
+    const a6 = mkAct(z2, 'GF underslab MEP', 'MEP Rough-in', day(-12), day(-8));
+    mkAct(z3, 'L1 column rebar', 'Rebar', day(6), day(10));
+    mkAct(z3, 'L1 column pour', 'Concrete Pour', day(11), day(12));
+    const a9 = mkAct(z4, 'Podium backfill layer 1', 'Backfill', day(-4), day(-2));
+    mkAct(z4, 'Podium backfill layer 2', 'Backfill', day(2), day(4));
+    const mkMS = (num, title, type, status) => { DB.method_statements.push({ id: uuid(), project_id: project, ms_number: num, title, activity_type: type, status, file_url: null, approved_date: status === 'Approved' ? day(-40) : null, created_at: t }); };
+    mkMS('MS-001', 'Reinforcement Fixing Method Statement', 'Rebar', 'Approved');
+    mkMS('MS-002', 'Concrete Pouring & Curing Method Statement', 'Concrete Pour', 'Approved');
+    mkMS('MS-003', 'Formwork Erection Method Statement', 'Formwork', 'Approved');
+    mkMS('MS-004', 'Backfilling & Compaction Method Statement', 'Backfill', 'Approved');
+    mkMS('MS-005', 'MEP First Fix Method Statement', 'MEP Rough-in', 'Submitted');
+    const CHECK = [
+      { item: 'Work matches latest drawing revision', result: 'Pass' }, { item: 'Materials approved and undamaged', result: 'Pass' },
+      { item: 'Setting out / levels checked', result: 'Pass' }, { item: 'Safety access in place', result: 'Pass' }, { item: 'Housekeeping acceptable', result: 'Pass' },
+    ];
+    const mkWIR = (n, zone, act, type, desc, status, date, drawings) => {
+      const id = uuid();
+      DB.wirs.push({ id, project_id: project, zone_id: zone, activity_id: act, wir_number: n, activity_type: type, description: desc, location: 'Per drawing grid', contractor: 'Gulf Build LLC', inspection_types: JSON.stringify([type]), checklist: JSON.stringify(CHECK), remarks: null, status, engineer_id: eng, inspection_date: date, pdf_url: null, created_at: t });
+      for (const d of drawings) DB.wir_drawings.push({ id: uuid(), wir_id: id, drawing_id: d });
+      return id;
+    };
+    mkWIR('WIR-001', z1, a1, 'Rebar', 'Basement raft reinforcement — zone A1-D4', 'Approved', day(-24), [d1]);
+    const w2 = mkWIR('WIR-002', z1, a2, 'Concrete Pour', 'Basement raft pour 850m³ C40', 'Approved', day(-21), [d1]);
+    mkWIR('WIR-003', z2, a6, 'MEP Rough-in', 'GF underslab drainage first fix', 'Submitted', day(-8), [d4]);
+    mkWIR('WIR-004', z2, a4, 'Rebar', 'GF slab reinforcement', 'Under Review', day(-1), [d2]);
+    const w5 = mkWIR('WIR-005', z4, a9, 'Backfill', 'Podium backfill layer 1 — 620m²', 'Submitted', day(-2), [d5]);
+    const mkTR = (n, wir, type, sample, extra = {}) => {
+      const id = uuid();
+      DB.test_requests.push({ id, project_id: project, wir_id: wir, tr_number: n, test_type: type, sample_date: sample, location: extra.location || null, sample_count: extra.count || 3, spec_reference: extra.spec || null, lab_name: 'Gulf Lab Services', notes: null, layer_no: extra.layer || null, area_m2: extra.area || null, mdd_ref: null, due_7day: extra.due7 || null, due_28day: extra.due28 || null, status: extra.status || 'Pending', created_by: eng, created_at: t });
+      return id;
+    };
+    const mkResult = (tr, value, limit, pf, date) => {
+      DB.test_results.push({ id: uuid(), tr_id: tr, result_value: value, spec_limit: limit, pass_fail: pf, result_date: date, report_url: null, entered_by: qa, created_at: t });
+      DB.test_requests.find((x) => x.id === tr).status = 'Completed';
+    };
+    const tr1 = mkTR('TR-2026-001', w2, 'Slump', day(-21), { spec: 'Mix D40 target 160mm', status: 'Completed' });
+    mkResult(tr1, 165, 25, 'PASS', day(-21));
+    const tr2 = mkTR('TR-2026-002', w2, 'Concrete Cube C40', day(-21), { spec: 'C40', due7: day(-14), due28: day(7), status: 'Completed' });
+    mkResult(tr2, 32.5, 26, 'PASS', day(-14));
+    mkTR('TR-2026-003', w2, 'Concrete Cube C40', day(-21), { spec: 'C40', due7: day(-14), due28: day(7) });
+    const tr4 = mkTR('TR-2026-004', w5, 'FDT', day(-2), { layer: 1, area: 620, spec: 'min 95% MDD', status: 'Completed' });
+    mkResult(tr4, 96.4, 95, 'PASS', day(-1));
+    const tr5 = mkTR('TR-2026-005', w5, 'FDT', day(-2), { layer: 1, area: 620, spec: 'min 95% MDD', status: 'Completed' });
+    mkResult(tr5, 91.2, 95, 'FAIL', day(-1));
+    DB.ncrs.push({ id: uuid(), project_id: project, ncr_number: 'NCR-2026-001', source_type: 'TR', source_id: tr5, wir_id: w5, description: 'FDT result 91.2% MDD below specified minimum 95% MDD — Podium backfill layer 1 (TR-2026-005).', root_cause: null, corrective_action: null, retest_tr_id: null, status: 'Open', closeout_evidence: null, signed_off_by: null, raised_at: t, closed_at: null });
+    for (const [u, type, msg] of [
+      [qa, 'WIR_SUBMITTED', 'WIR-005 submitted by Devan Prabu — Podium backfill layer 1'],
+      [qa, 'TEST_FAILED', 'TEST FAILED: TR-2026-005 FDT 91.2% vs min 95% MDD — NCR-2026-001 auto-raised'],
+      [eng, 'TEST_FAILED', 'TEST FAILED: TR-2026-005 FDT 91.2% vs min 95% MDD — NCR-2026-001 auto-raised'],
+      [eng, 'TR_DUE_SOON', 'TR-2026-003 28-day cube result due in 7 days'],
+    ]) DB.notifications.push({ id: uuid(), user_id: u, type, message: msg, ref_type: null, ref_id: null, dedupe_key: null, sent_at: t, read_at: null });
+    save();
+  }
+  try { DB = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) {}
+  if (!DB || !DB.users || !DB.users.length) seed();
+  window.wfDemoReset = () => { localStorage.removeItem(LS_KEY); localStorage.removeItem('wf_token'); localStorage.removeItem('wf_user'); localStorage.removeItem('wf_project'); location.reload(); };
+
+  /* ---------- helpers ---------- */
+  const by = (arr, k, v) => arr.find((x) => x[k] === v);
+  const all = (arr, k, v) => arr.filter((x) => x[k] === v);
+  class ApiError extends Error { constructor(status, message) { super(message); this.status = status; } }
+  const req0 = (v, n) => { if (v === undefined || v === null || v === '') throw new ApiError(400, `Missing "${n}".`); return v; };
+  function nextNumber(arr, col, prefix, project_id, pad = 3) {
+    let max = 0;
+    for (const r of all(arr, 'project_id', project_id)) { const m = String(r[col]).match(/(\d+)$/); if (m) max = Math.max(max, parseInt(m[1], 10)); }
+    return prefix + String(max + 1).padStart(pad, '0');
+  }
+  function notify(userIds, type, message, refType, refId, dedupeKey) {
+    for (const uid of new Set(userIds.filter(Boolean))) {
+      if (dedupeKey && DB.notifications.some((n) => n.user_id === uid && n.dedupe_key === dedupeKey)) continue;
+      DB.notifications.push({ id: uuid(), user_id: uid, type, message, ref_type: refType || null, ref_id: refId || null, dedupe_key: dedupeKey || null, sent_at: now(), read_at: null });
+    }
+  }
+  const membersByRole = (pid, roles) => all(DB.project_members, 'project_id', pid).filter((m) => roles.includes(m.role)).map((m) => m.user_id);
+  const latestResult = (trId) => all(DB.test_results, 'tr_id', trId).sort((a, b) => b.created_at.localeCompare(a.created_at))[0] || null;
+  const zoneName = (id) => (by(DB.zones, 'id', id) || {}).name || null;
+  const userName = (id) => (by(DB.users, 'id', id) || {}).name || null;
+
+  function runChecks(pid) {
+    const t = today(); const soon = day(2); const look = day(3);
+    for (const tr of DB.test_requests.filter((x) => x.project_id === pid && x.status === 'Pending')) {
+      for (const [due, label] of [[tr.due_7day, '7-day'], [tr.due_28day, '28-day']]) {
+        if (!due) continue;
+        const targets = [tr.created_by, ...membersByRole(pid, ['QA'])];
+        if (due < t) notify([...targets, ...membersByRole(pid, ['Admin'])], 'TR_OVERDUE', `${tr.tr_number} ${label} result is OVERDUE (was due ${due})`, 'tr', tr.id, `overdue:${tr.id}:${label}`);
+        else if (due <= soon) notify(targets, 'TR_DUE_SOON', `${tr.tr_number} ${label} result due ${due}`, 'tr', tr.id, `due:${tr.id}:${label}`);
+      }
+    }
+    for (const a of DB.activities.filter((x) => x.project_id === pid && x.planned_start && x.planned_start >= t && x.planned_start <= look && !DB.wirs.some((w) => w.activity_id === x.id))) {
+      notify(membersByRole(pid, ['Engineer', 'QA']), 'WIR_DUE_SOON', `${a.name} (${zoneName(a.zone_id)}) starts ${a.planned_start} — no WIR raised yet`, 'activity', a.id, `wirdue:${a.id}`);
+    }
+  }
+  const msGate = (pid, type) => {
+    const list = DB.method_statements.filter((m) => m.project_id === pid && m.activity_type === type);
+    const ms = list.find((m) => m.status === 'Approved') || list[0] || null;
+    return { ms, approved: !!(ms && ms.status === 'Approved') };
+  };
+  function fdtSummaryForZone(zone) {
+    if (!zone) return [];
+    const trs = DB.test_requests.filter((tr) => tr.test_type === 'FDT' && tr.layer_no != null && (by(DB.wirs, 'id', tr.wir_id) || {}).zone_id === zone.id);
+    const layers = {};
+    for (const tr of trs) {
+      const L = (layers[tr.layer_no] = layers[tr.layer_no] || { layer_no: tr.layer_no, area_m2: 0, done: 0, failed: 0 });
+      L.area_m2 = Math.max(L.area_m2, tr.area_m2 || 0); L.done++;
+      const r = latestResult(tr.id); if (r && r.pass_fail === 'FAIL') L.failed++;
+    }
+    return Object.values(layers).sort((a, b) => a.layer_no - b.layer_no).map((L) => ({ ...L, zone_name: zone.name, required: L.area_m2 ? Math.ceil(L.area_m2 / FDT_AREA) : 0, deficient: L.done < (L.area_m2 ? Math.ceil(L.area_m2 / FDT_AREA) : 0) }));
+  }
+  function getWIR(id) {
+    const w0 = by(DB.wirs, 'id', id); if (!w0) return null;
+    const w = { ...w0, zone_name: zoneName(w0.zone_id), engineer_name: userName(w0.engineer_id), activity_name: (by(DB.activities, 'id', w0.activity_id) || {}).name || null };
+    w.inspection_types = JSON.parse(w.inspection_types || '[]');
+    w.checklist = JSON.parse(w.checklist || '[]');
+    w.drawings = all(DB.wir_drawings, 'wir_id', id).map((x) => by(DB.shop_drawings, 'id', x.drawing_id)).filter(Boolean);
+    w.trs = all(DB.test_requests, 'wir_id', id).map((tr) => ({ ...tr, pass_fail: (latestResult(tr.id) || {}).pass_fail || null }));
+    w.ncrs = all(DB.ncrs, 'wir_id', id);
+    w.comments = all(DB.wir_comments, 'wir_id', id).sort((a, b) => a.created_at.localeCompare(b.created_at)).map((c) => ({ ...c, user_name: userName(c.user_id) }));
+    const blockers = [];
+    const pending = w.trs.filter((t) => t.status === 'Pending').length;
+    if (pending) blockers.push(`${pending} test result(s) pending`);
+    const failed = w.trs.filter((t) => t.pass_fail === 'FAIL' && !DB.ncrs.some((n) => n.source_type === 'TR' && n.source_id === t.id && n.status === 'Closed')).length;
+    if (failed) blockers.push(`${failed} FAILED test result(s) without closed NCR`);
+    const openN = w.ncrs.filter((n) => n.status !== 'Closed').length;
+    if (openN) blockers.push(`${openN} open NCR(s)`);
+    if (w.zone_id && w.activity_type === 'Backfill') {
+      const deficient = fdtSummaryForZone(by(DB.zones, 'id', w.zone_id)).filter((r) => r.deficient);
+      if (deficient.length) blockers.push(`FDT coverage deficient in ${w.zone_name} (layer ${deficient.map((d) => d.layer_no).join(', ')})`);
+    }
+    w.approval_blockers = blockers;
+    return w;
+  }
+  function createTR(data, user) {
+    const pid = data.project_id;
+    const isCube = /Concrete Cube/.test(data.test_type);
+    const sample = data.sample_date || today();
+    const addDays = (d, n) => new Date(new Date(d + 'T00:00:00Z').getTime() + n * 86400000).toISOString().slice(0, 10);
+    const tr = { id: uuid(), project_id: pid, wir_id: data.wir_id || null, tr_number: nextNumber(DB.test_requests, 'tr_number', `TR-${new Date().getFullYear()}-`, pid), test_type: data.test_type, sample_date: sample, location: data.location || null, sample_count: data.sample_count || null, spec_reference: data.spec_reference || null, lab_name: data.lab_name || null, notes: data.notes || null, layer_no: data.layer_no || null, area_m2: data.area_m2 || null, mdd_ref: null, due_7day: isCube ? addDays(sample, 7) : null, due_28day: isCube ? addDays(sample, 28) : null, status: 'Pending', created_by: user.id, created_at: now() };
+    DB.test_requests.push(tr);
+    return tr;
+  }
+  function evaluate(test_type, value, specOverride, specReference) {
+    const spec = SPEC_TABLE[test_type] || SPEC_TABLE.Other;
+    if (test_type === 'Slump') {
+      const target = (String(specReference || '').match(/(\d{2,3})\s*mm/) || [])[1];
+      const centre = target ? Number(target) : spec.target;
+      const tol = specOverride != null ? Number(specOverride) : spec.limit;
+      return { pass: Math.abs(value - centre) <= tol, limit: tol, detail: `${centre}mm ±${tol}mm` };
+    }
+    const limit = specOverride != null ? Number(specOverride) : spec.limit;
+    if (limit == null) return { pass: true, limit: null, detail: 'no spec limit — recorded only' };
+    return { pass: value >= limit, limit, detail: `min ${limit} ${spec.unit}` };
+  }
+
+  /* ---------- routes ---------- */
+  const routes = [];
+  function route(method, pattern, handler, opts = {}) {
+    const keys = [];
+    const rx = new RegExp('^' + pattern.replace(/:[a-zA-Z_]+/g, (m) => { keys.push(m.slice(1)); return '([^/]+)'; }) + '$');
+    routes.push({ method, rx, keys, handler, auth: opts.auth !== false });
+  }
+  const requireRole = (user, roles) => { if (!roles.includes(user.role)) throw new ApiError(403, `Requires role: ${roles.join(' or ')}`); };
+
+  route('POST', '/auth/login', ({ body }) => {
+    const u = by(DB.users, 'email', String(body.email || '').toLowerCase().trim());
+    if (!u || u.password !== String(body.password || '')) throw new ApiError(401, 'Invalid email or password.');
+    const token = uuid();
+    DB.sessions.push({ token, user_id: u.id, created_at: now() }); save();
+    return { token, user: { id: u.id, email: u.email, name: u.name, role: u.role } };
+  }, { auth: false });
+  route('POST', '/auth/logout', ({ headers }) => {
+    const t = (headers.authorization || '').slice(7);
+    DB.sessions = DB.sessions.filter((s) => s.token !== t); save();
+    return { ok: true };
+  }, { auth: false });
+  route('GET', '/me', ({ user }) => ({ user }));
+
+  route('GET', '/notifications', ({ user, query }) => {
+    if (query.project_id) { runChecks(query.project_id); save(); }
+    const rows = all(DB.notifications, 'user_id', user.id).sort((a, b) => b.sent_at.localeCompare(a.sent_at)).slice(0, 50);
+    return { notifications: rows, unread: all(DB.notifications, 'user_id', user.id).filter((n) => !n.read_at).length };
+  });
+  route('POST', '/notifications/read', ({ user, body }) => {
+    for (const n of DB.notifications) if (n.user_id === user.id && (!body.id || n.id === body.id) && !n.read_at) n.read_at = now();
+    save(); return { ok: true };
+  });
+
+  route('GET', '/projects', ({ user }) => ({
+    projects: DB.projects.filter((p) => DB.project_members.some((m) => m.project_id === p.id && m.user_id === user.id))
+      .map((p) => ({ ...p, wir_count: all(DB.wirs, 'project_id', p.id).length, member_count: all(DB.project_members, 'project_id', p.id).length })),
+  }));
+  route('POST', '/projects', ({ user, body }) => {
+    requireRole(user, ['Admin', 'QA']);
+    const p = { id: uuid(), name: req0(body.name, 'name'), location: body.location || null, client: body.client || null, contract_no: body.contract_no || null, start_date: body.start_date || null, created_by: user.id, created_at: now() };
+    DB.projects.push(p); DB.project_members.push({ id: uuid(), project_id: p.id, user_id: user.id, role: user.role }); save();
+    return { status: 201, project: p };
+  });
+  route('GET', '/projects/:id/team', ({ params }) => ({
+    members: all(DB.project_members, 'project_id', params.id).map((m) => { const u = by(DB.users, 'id', m.user_id); return { member_id: m.id, project_role: m.role, id: u.id, name: u.name, email: u.email }; }),
+  }));
+  route('POST', '/projects/:id/team', ({ user, params, body }) => {
+    requireRole(user, ['Admin', 'QA']);
+    const email = String(req0(body.email, 'email')).toLowerCase().trim();
+    const role = ROLES.includes(body.role) ? body.role : 'Engineer';
+    let u = by(DB.users, 'email', email);
+    if (!u) { u = { id: uuid(), email, name: body.name || email.split('@')[0], role, password: 'changeme123', created_at: now() }; DB.users.push(u); }
+    if (DB.project_members.some((m) => m.project_id === params.id && m.user_id === u.id)) throw new ApiError(409, 'Already a member of this project.');
+    DB.project_members.push({ id: uuid(), project_id: params.id, user_id: u.id, role }); save();
+    return { status: 201, member: { id: u.id, email: u.email, name: u.name, project_role: role } };
+  });
+
+  route('POST', '/upload', ({ raw, query }) => {
+    const url = URL.createObjectURL(new Blob([raw], { type: 'application/octet-stream' }));
+    return { status: 201, url, name: query.name || 'file', size: raw.size || raw.byteLength || 0 };
+  }, { raw: true });
+
+  route('GET', '/drawings', ({ query }) => {
+    let rows = all(DB.shop_drawings, 'project_id', req0(query.project_id, 'project_id'));
+    const q = (query.q || '').trim().toLowerCase();
+    if (q) rows = rows.filter((d) => (d.drawing_number || '').toLowerCase().includes(q) || (d.title || '').toLowerCase().includes(q));
+    if (query.latest !== '0') rows = rows.filter((d) => d.is_latest === 1);
+    rows = rows.slice().sort((a, b) => a.drawing_number.localeCompare(b.drawing_number) || b.revision.localeCompare(a.revision));
+    return { drawings: rows.map((d) => ({ ...d, wir_count: all(DB.wir_drawings, 'drawing_id', d.id).length })) };
+  });
+  route('POST', '/drawings', ({ body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    const number = String(req0(body.drawing_number, 'drawing_number')).trim();
+    for (const d of DB.shop_drawings) if (d.project_id === pid && d.drawing_number === number) d.is_latest = 0;
+    const d = { id: uuid(), project_id: pid, drawing_number: number, title: body.title || null, revision: String(req0(body.revision, 'revision')).trim(), discipline: body.discipline || 'Structural', file_url: body.file_url || null, is_latest: 1, created_at: now() };
+    DB.shop_drawings.push(d); save();
+    return { status: 201, drawing: d };
+  });
+  route('GET', '/drawings/:id', ({ params }) => {
+    const d = by(DB.shop_drawings, 'id', params.id); if (!d) throw new ApiError(404, 'Drawing not found.');
+    return {
+      drawing: d,
+      revisions: DB.shop_drawings.filter((x) => x.project_id === d.project_id && x.drawing_number === d.drawing_number).sort((a, b) => b.created_at.localeCompare(a.created_at)),
+      wirs: all(DB.wir_drawings, 'drawing_id', params.id).map((x) => by(DB.wirs, 'id', x.wir_id)).filter(Boolean).map((w) => ({ id: w.id, wir_number: w.wir_number, status: w.status })),
+    };
+  });
+
+  const zoneLatestDrawings = (zoneId) => {
+    const seen = new Set(); const out = [];
+    for (const zd of all(DB.zone_drawings, 'zone_id', zoneId)) {
+      const mapped = by(DB.shop_drawings, 'id', zd.drawing_id); if (!mapped) continue;
+      const latest = DB.shop_drawings.find((d) => d.project_id === mapped.project_id && d.drawing_number === mapped.drawing_number && d.is_latest === 1);
+      if (latest && !seen.has(latest.id)) { seen.add(latest.id); out.push(latest); }
+    }
+    return out;
+  };
+  route('GET', '/zones', ({ query }) => ({
+    zones: all(DB.zones, 'project_id', req0(query.project_id, 'project_id')).sort((a, b) => a.name.localeCompare(b.name))
+      .map((z) => ({ ...z, drawing_count: all(DB.zone_drawings, 'zone_id', z.id).length, wir_count: all(DB.wirs, 'zone_id', z.id).length })),
+  }));
+  route('POST', '/zones', ({ user, body }) => {
+    requireRole(user, ['QA', 'Admin']);
+    const z = { id: uuid(), project_id: req0(body.project_id, 'project_id'), name: req0(body.name, 'name'), grid_ref: body.grid_ref || null, description: body.description || null, floor_plan_url: null, created_by: user.id };
+    DB.zones.push(z); save();
+    return { status: 201, zone: z };
+  });
+  route('GET', '/zones/:id', ({ params }) => {
+    const zone = by(DB.zones, 'id', params.id); if (!zone) throw new ApiError(404, 'Zone not found.');
+    return { zone, drawings: zoneLatestDrawings(params.id), fdt: fdtSummaryForZone(zone) };
+  });
+  route('GET', '/zones/:id/drawings', ({ params }) => ({ drawings: zoneLatestDrawings(params.id) }));
+  route('POST', '/zones/:id/drawings', ({ params, body }) => {
+    DB.zone_drawings = DB.zone_drawings.filter((x) => x.zone_id !== params.id);
+    for (const d of body.drawing_ids || []) DB.zone_drawings.push({ id: uuid(), zone_id: params.id, drawing_id: d });
+    save(); return { ok: true, count: (body.drawing_ids || []).length };
+  });
+
+  route('GET', '/programme', ({ query }) => {
+    const t = today(); const look = day(3);
+    const rows = all(DB.activities, 'project_id', req0(query.project_id, 'project_id'))
+      .sort((a, b) => String(a.planned_start).localeCompare(String(b.planned_start)))
+      .map((a) => {
+        const w = all(DB.wirs, 'activity_id', a.id).sort((x, y) => y.created_at.localeCompare(x.created_at))[0];
+        let flag = null;
+        if (!w && a.planned_start) { if (a.planned_start < t) flag = 'WIR Overdue'; else if (a.planned_start <= look) flag = 'WIR Due Soon'; }
+        return { ...a, zone_name: zoneName(a.zone_id), wir_status: w ? w.status : null, wir_number: w ? w.wir_number : null, flag };
+      });
+    return { activities: rows, activity_types: ACTIVITY_TYPES };
+  });
+  route('POST', '/activities', ({ body }) => {
+    const a = { id: uuid(), project_id: req0(body.project_id, 'project_id'), zone_id: req0(body.zone_id, 'zone_id'), name: req0(body.name, 'name'), type: ACTIVITY_TYPES.includes(body.type) ? body.type : 'Rebar', planned_start: body.planned_start || null, planned_end: body.planned_end || null };
+    DB.activities.push(a); save();
+    return { status: 201, activity: a };
+  });
+  route('POST', '/activities/import', ({ body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    let n = 0;
+    for (const r of body.rows || []) {
+      const zone = DB.zones.find((z) => z.project_id === pid && r.zone && z.name.toLowerCase().includes(String(r.zone).toLowerCase()));
+      if (!zone || !r.activity) continue;
+      DB.activities.push({ id: uuid(), project_id: pid, zone_id: zone.id, name: r.activity, type: ACTIVITY_TYPES.includes(r.type) ? r.type : 'Rebar', planned_start: r.start || null, planned_end: r.end || null });
+      n++;
+    }
+    save(); return { imported: n };
+  });
+
+  route('GET', '/method-statements', ({ query }) => ({
+    method_statements: all(DB.method_statements, 'project_id', req0(query.project_id, 'project_id')).sort((a, b) => a.ms_number.localeCompare(b.ms_number))
+      .map((m) => ({ ...m, wir_count: DB.wirs.filter((w) => w.project_id === m.project_id && w.activity_type === m.activity_type).length })),
+  }));
+  route('POST', '/method-statements', ({ body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    const m = { id: uuid(), project_id: pid, ms_number: body.ms_number || nextNumber(DB.method_statements, 'ms_number', 'MS-', pid), title: req0(body.title, 'title'), activity_type: req0(body.activity_type, 'activity_type'), status: 'Submitted', file_url: body.file_url || null, approved_date: null, created_at: now() };
+    DB.method_statements.push(m); save();
+    return { status: 201, method_statement: m };
+  });
+  route('PATCH', '/method-statements/:id', ({ user, params, body }) => {
+    requireRole(user, ['QA', 'Admin']);
+    const m = by(DB.method_statements, 'id', params.id); if (!m) throw new ApiError(404, 'MS not found.');
+    if (!['Submitted', 'Approved', 'Rejected'].includes(body.status)) throw new ApiError(400, 'Invalid status.');
+    m.status = body.status; m.approved_date = body.status === 'Approved' ? today() : null; save();
+    return { method_statement: m };
+  });
+
+  route('GET', '/wir-form-context', ({ query }) => {
+    const pid = req0(query.project_id, 'project_id');
+    return {
+      next_wir_number: nextNumber(DB.wirs, 'wir_number', 'WIR-', pid),
+      zones: all(DB.zones, 'project_id', pid).sort((a, b) => a.name.localeCompare(b.name)).map((z) => ({ id: z.id, name: z.name })),
+      activity_types: ACTIVITY_TYPES,
+      ms_status: Object.fromEntries(ACTIVITY_TYPES.map((t) => [t, msGate(pid, t)])),
+    };
+  });
+  route('POST', '/wirs', ({ user, body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    const type = req0(body.activity_type, 'activity_type');
+    const status = body.status === 'Submitted' ? 'Submitted' : 'Draft';
+    if (status === 'Submitted') {
+      const gate = msGate(pid, type);
+      if (!gate.approved) throw new ApiError(422, `No approved Method Statement for "${type}". Save as Draft, or get ${gate.ms ? gate.ms.ms_number : 'an MS'} approved first.`);
+    }
+    const w = { id: uuid(), project_id: pid, zone_id: body.zone_id || null, activity_id: body.activity_id || null, wir_number: nextNumber(DB.wirs, 'wir_number', 'WIR-', pid), activity_type: type, description: body.description || null, location: body.location || null, contractor: body.contractor || null, inspection_types: JSON.stringify(body.inspection_types || []), checklist: JSON.stringify(body.checklist || []), remarks: body.remarks || null, status, engineer_id: user.id, inspection_date: body.inspection_date || today(), pdf_url: null, created_at: now() };
+    DB.wirs.push(w);
+    for (const d of body.drawing_ids || []) if (!DB.wir_drawings.some((x) => x.wir_id === w.id && x.drawing_id === d)) DB.wir_drawings.push({ id: uuid(), wir_id: w.id, drawing_id: d });
+    const spawned = (body.tests_required || []).filter((t) => TEST_TYPES.includes(t)).map((t) => createTR({ project_id: pid, wir_id: w.id, test_type: t, sample_date: body.inspection_date || today() }, user));
+    if (status === 'Submitted') notify(membersByRole(pid, ['QA']), 'WIR_SUBMITTED', `${w.wir_number} submitted by ${user.name} — ${body.description || type}`, 'wir', w.id);
+    save();
+    return { status: 201, wir: getWIR(w.id), spawned_trs: spawned.map((t) => t.tr_number) };
+  });
+  route('GET', '/wirs', ({ query }) => {
+    let rows = all(DB.wirs, 'project_id', req0(query.project_id, 'project_id'));
+    if (query.status) rows = rows.filter((w) => w.status === query.status);
+    if (query.zone_id) rows = rows.filter((w) => w.zone_id === query.zone_id);
+    rows = rows.slice().sort((a, b) => b.created_at.localeCompare(a.created_at)).map((w) => {
+      const trs = all(DB.test_requests, 'wir_id', w.id);
+      return { ...w, zone_name: zoneName(w.zone_id), engineer_name: userName(w.engineer_id), tr_total: trs.length, tr_pending: trs.filter((t) => t.status === 'Pending').length, tr_failed: trs.filter((t) => (latestResult(t.id) || {}).pass_fail === 'FAIL').length, ncr_open: all(DB.ncrs, 'wir_id', w.id).filter((n) => n.status !== 'Closed').length };
+    });
+    return { wirs: rows };
+  });
+  route('GET', '/wirs/:id', ({ params }) => {
+    const w = getWIR(params.id); if (!w) throw new ApiError(404, 'WIR not found.');
+    return { wir: w };
+  });
+  const WIR_FLOW = ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Resubmit Required'];
+  route('PATCH', '/wirs/:id/status', ({ user, params, body }) => {
+    const w = getWIR(params.id); if (!w) throw new ApiError(404, 'WIR not found.');
+    const status = req0(body.status, 'status');
+    if (!WIR_FLOW.includes(status)) throw new ApiError(400, 'Invalid status.');
+    if (['Approved', 'Rejected', 'Under Review', 'Resubmit Required'].includes(status)) requireRole(user, ['QA', 'Admin']);
+    if (status === 'Submitted' && !msGate(w.project_id, w.activity_type).approved) throw new ApiError(422, `No approved Method Statement for "${w.activity_type}".`);
+    if (status === 'Approved' && w.approval_blockers.length) throw new ApiError(422, 'Cannot approve: ' + w.approval_blockers.join('; '));
+    by(DB.wirs, 'id', params.id).status = status;
+    DB.wir_comments.push({ id: uuid(), wir_id: params.id, user_id: user.id, text: body.comment || `Status changed to ${status}`, status_change: status, created_at: now() });
+    if (status === 'Approved') notify([w.engineer_id], 'WIR_APPROVED', `${w.wir_number} approved by ${user.name}`, 'wir', params.id);
+    if (status === 'Rejected' || status === 'Resubmit Required') notify([w.engineer_id], 'WIR_REJECTED', `${w.wir_number} ${status.toLowerCase()} by ${user.name}${body.comment ? ': ' + body.comment : ''}`, 'wir', params.id);
+    if (status === 'Submitted') notify(membersByRole(w.project_id, ['QA']), 'WIR_SUBMITTED', `${w.wir_number} submitted by ${user.name}`, 'wir', params.id);
+    save();
+    return { wir: getWIR(params.id) };
+  });
+  route('POST', '/wirs/:id/comments', ({ user, params, body }) => {
+    DB.wir_comments.push({ id: uuid(), wir_id: params.id, user_id: user.id, text: req0(body.text, 'text'), status_change: null, created_at: now() });
+    save(); return { status: 201, ok: true };
+  });
+
+  route('GET', '/trs', ({ query }) => {
+    let rows = all(DB.test_requests, 'project_id', req0(query.project_id, 'project_id'));
+    if (query.status) rows = rows.filter((t) => t.status === query.status);
+    const t = today();
+    rows = rows.slice().sort((a, b) => String(a.due_28day || a.due_7day || a.sample_date).localeCompare(String(b.due_28day || b.due_7day || b.sample_date)))
+      .map((tr) => {
+        const pf = (latestResult(tr.id) || {}).pass_fail || null;
+        return { ...tr, wir_number: (by(DB.wirs, 'id', tr.wir_id) || {}).wir_number || null, pass_fail: pf, due: tr.due_28day && !pf ? tr.due_28day : tr.due_7day, overdue: tr.status === 'Pending' && ((tr.due_7day && tr.due_7day < t) || (tr.due_28day && tr.due_28day < t)) };
+      });
+    return { trs: rows, test_types: TEST_TYPES };
+  });
+  route('POST', '/trs', ({ user, body }) => {
+    req0(body.project_id, 'project_id');
+    if (!TEST_TYPES.includes(body.test_type)) throw new ApiError(400, 'Invalid test_type.');
+    const tr = createTR(body, user); save();
+    return { status: 201, tr };
+  });
+  route('GET', '/trs/:id', ({ params }) => {
+    const tr = by(DB.test_requests, 'id', params.id); if (!tr) throw new ApiError(404, 'TR not found.');
+    return {
+      tr: { ...tr, wir_number: (by(DB.wirs, 'id', tr.wir_id) || {}).wir_number || null, spec: SPEC_TABLE[tr.test_type] || null,
+        results: all(DB.test_results, 'tr_id', params.id).sort((a, b) => b.created_at.localeCompare(a.created_at)).map((r) => ({ ...r, entered_by_name: userName(r.entered_by) })) },
+    };
+  });
+  route('GET', '/specs', () => ({ specs: SPEC_TABLE, test_types: TEST_TYPES }));
+
+  route('POST', '/trs/:id/result', ({ user, params, body }) => {
+    const tr = by(DB.test_requests, 'id', params.id); if (!tr) throw new ApiError(404, 'TR not found.');
+    const value = Number(req0(body.result_value, 'result_value'));
+    if (Number.isNaN(value)) throw new ApiError(400, 'result_value must be a number.');
+    const ev = evaluate(tr.test_type, value, body.spec_limit, tr.spec_reference);
+    const pf = ev.pass ? 'PASS' : 'FAIL';
+    const result = { id: uuid(), tr_id: params.id, result_value: value, spec_limit: ev.limit, pass_fail: pf, result_date: body.result_date || today(), report_url: body.report_url || null, entered_by: user.id, created_at: now() };
+    DB.test_results.push(result);
+    tr.status = 'Completed';
+    const wir = tr.wir_id ? by(DB.wirs, 'id', tr.wir_id) : null;
+    let ncr = null;
+    if (pf === 'FAIL') {
+      ncr = { id: uuid(), project_id: tr.project_id, ncr_number: nextNumber(DB.ncrs, 'ncr_number', `NCR-${new Date().getFullYear()}-`, tr.project_id), source_type: 'TR', source_id: tr.id, wir_id: tr.wir_id, description: `${tr.test_type} result ${value} below spec (${ev.detail}) — ${tr.tr_number}${wir ? ' / ' + wir.wir_number : ''}.`, root_cause: null, corrective_action: null, retest_tr_id: null, status: 'Open', closeout_evidence: null, signed_off_by: null, raised_at: now(), closed_at: null };
+      DB.ncrs.push(ncr);
+      const targets = [tr.created_by, wir && wir.engineer_id, ...membersByRole(tr.project_id, ['QA', 'Admin'])];
+      notify(targets, 'TEST_FAILED', `TEST FAILED: ${tr.tr_number} ${tr.test_type} = ${value} (${ev.detail}). ${ncr.ncr_number} auto-raised.`, 'ncr', ncr.id);
+      notify(targets, 'NCR_RAISED', `${ncr.ncr_number} raised against ${tr.tr_number}${wir ? ' / ' + wir.wir_number : ''}`, 'ncr', ncr.id);
+    } else if (wir) {
+      const trs = all(DB.test_requests, 'wir_id', wir.id);
+      const remaining = trs.filter((x) => x.status === 'Pending').length;
+      const failed = trs.filter((x) => (latestResult(x.id) || {}).pass_fail === 'FAIL').length;
+      if (!remaining && !failed) notify([wir.engineer_id, ...membersByRole(tr.project_id, ['QA'])], 'TR_CLEARED', `All test results for ${wir.wir_number} passed — approval unblocked`, 'wir', wir.id, `cleared:${wir.id}`);
+    }
+    save();
+    return { status: 201, result, pass_fail: pf, spec_detail: ev.detail, ncr };
+  });
+
+  route('GET', '/fdt', ({ query }) => {
+    const pid = req0(query.project_id, 'project_id');
+    const summary = all(DB.zones, 'project_id', pid).flatMap((z) => fdtSummaryForZone(z));
+    const logs = DB.test_requests.filter((tr) => tr.project_id === pid && tr.test_type === 'FDT' && tr.wir_id)
+      .sort((a, b) => b.created_at.localeCompare(a.created_at))
+      .map((tr) => {
+        const w = by(DB.wirs, 'id', tr.wir_id) || {};
+        const r = latestResult(tr.id) || {};
+        return { ...tr, zone_name: zoneName(w.zone_id), wir_number: w.wir_number, result_value: r.result_value != null ? r.result_value : null, pass_fail: r.pass_fail || null };
+      });
+    return { summary, logs, area_per_test: FDT_AREA };
+  });
+
+  const STATUS_RANK = { 'Rejected': 0, 'Resubmit Required': 1, 'Draft': 2, 'Submitted': 3, 'Under Review': 4, 'Approved': 5 };
+  route('GET', '/matrix', ({ query }) => {
+    const pid = req0(query.project_id, 'project_id');
+    const zones = all(DB.zones, 'project_id', pid).sort((a, b) => a.name.localeCompare(b.name));
+    const wirs = all(DB.wirs, 'project_id', pid).map((w) => ({ id: w.id, wir_number: w.wir_number, zone_id: w.zone_id, activity_type: w.activity_type, status: w.status, tr_pending: all(DB.test_requests, 'wir_id', w.id).filter((t) => t.status === 'Pending').length }));
+    const grid = zones.map((z) => {
+      const cells = {};
+      for (const t of ACTIVITY_TYPES) {
+        const cw = wirs.filter((w) => w.zone_id === z.id && w.activity_type === t);
+        const planned = DB.activities.some((a) => a.zone_id === z.id && a.type === t);
+        if (!cw.length) { cells[t] = { state: planned ? 'Not Started' : 'N/A', wirs: [] }; continue; }
+        const worst = cw.reduce((a, b) => (STATUS_RANK[a.status] <= STATUS_RANK[b.status] ? a : b));
+        const trp = cw.reduce((s, w) => s + w.tr_pending, 0);
+        cells[t] = { state: trp > 0 && worst.status !== 'Rejected' ? 'TR Pending' : worst.status, wirs: cw, tr_pending: trp };
+      }
+      const zw = wirs.filter((w) => w.zone_id === z.id);
+      return { zone: { id: z.id, name: z.name }, cells, progress: zw.length ? Math.round(100 * zw.filter((w) => w.status === 'Approved').length / zw.length) : 0 };
+    });
+    return { grid, activity_types: ACTIVITY_TYPES };
+  });
+
+  route('GET', '/lab-matrix', ({ query }) => {
+    const pid = req0(query.project_id, 'project_id');
+    const wirs = all(DB.wirs, 'project_id', pid).filter((w) => DB.test_requests.some((t) => t.wir_id === w.id)).sort((a, b) => a.wir_number.localeCompare(b.wir_number));
+    const colOf = (tr, pf) => {
+      if (/Concrete Cube/.test(tr.test_type)) return pf && tr.due_28day && tr.due_28day > today() ? '7-day Cube' : '28-day Cube';
+      return LAB_COLS.includes(tr.test_type) ? tr.test_type : null;
+    };
+    const rank = { FAIL: 0, Pending: 1, PASS: 2, 'N/A': 3 };
+    const rows = wirs.map((w) => {
+      const cells = Object.fromEntries(LAB_COLS.map((c) => [c, { state: 'N/A', trs: [] }]));
+      for (const tr of all(DB.test_requests, 'wir_id', w.id)) {
+        const pf = (latestResult(tr.id) || {}).pass_fail || null;
+        const col = colOf(tr, pf); if (!col) continue;
+        const cell = cells[col];
+        cell.trs.push({ id: tr.id, tr_number: tr.tr_number, pass_fail: pf, status: tr.status });
+        const st = pf === 'FAIL' ? 'FAIL' : tr.status === 'Pending' ? 'Pending' : pf === 'PASS' ? 'PASS' : 'Pending';
+        if (rank[st] < rank[cell.state] || cell.state === 'N/A') cell.state = st;
+      }
+      return { wir: { id: w.id, wir_number: w.wir_number, description: w.description, activity_type: w.activity_type, zone_name: zoneName(w.zone_id) }, cells };
+    });
+    const summary = Object.fromEntries(LAB_COLS.map((c) => {
+      const allTr = rows.flatMap((r) => r.cells[c].trs);
+      const done = allTr.filter((t) => t.pass_fail);
+      return [c, { total: allTr.length, pass: done.filter((t) => t.pass_fail === 'PASS').length, done: done.length }];
+    }));
+    return { rows, columns: LAB_COLS, summary };
+  });
+
+  route('GET', '/ncrs', ({ query }) => ({
+    ncrs: all(DB.ncrs, 'project_id', req0(query.project_id, 'project_id')).sort((a, b) => b.raised_at.localeCompare(a.raised_at))
+      .map((n) => ({ ...n, wir_number: (by(DB.wirs, 'id', n.wir_id) || {}).wir_number || null, tr_number: n.source_type === 'TR' ? (by(DB.test_requests, 'id', n.source_id) || {}).tr_number || null : null })),
+  }));
+  route('POST', '/ncrs', ({ user, body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    const n = { id: uuid(), project_id: pid, ncr_number: nextNumber(DB.ncrs, 'ncr_number', `NCR-${new Date().getFullYear()}-`, pid), source_type: body.source_type || 'Manual', source_id: body.source_id || null, wir_id: body.wir_id || null, description: req0(body.description, 'description'), root_cause: null, corrective_action: null, retest_tr_id: null, status: 'Open', closeout_evidence: null, signed_off_by: null, raised_at: now(), closed_at: null };
+    DB.ncrs.push(n);
+    notify(membersByRole(pid, ['QA', 'Admin', 'Engineer']), 'NCR_RAISED', `${n.ncr_number} raised: ${n.description}`, 'ncr', n.id);
+    save();
+    return { status: 201, ncr: n };
+  });
+  route('GET', '/ncrs/:id', ({ params }) => {
+    const n = by(DB.ncrs, 'id', params.id); if (!n) throw new ApiError(404, 'NCR not found.');
+    return { ncr: { ...n, wir_number: (by(DB.wirs, 'id', n.wir_id) || {}).wir_number || null, tr_number: n.source_type === 'TR' ? (by(DB.test_requests, 'id', n.source_id) || {}).tr_number || null : null, signed_off_name: userName(n.signed_off_by) } };
+  });
+  route('PATCH', '/ncrs/:id', ({ user, params, body }) => {
+    const n = by(DB.ncrs, 'id', params.id); if (!n) throw new ApiError(404, 'NCR not found.');
+    for (const k of ['root_cause', 'corrective_action', 'retest_tr_id', 'closeout_evidence']) if (body[k] !== undefined) n[k] = body[k];
+    if (body.status) {
+      if (!['Open', 'Under Review', 'Closed'].includes(body.status)) throw new ApiError(400, 'Invalid status.');
+      if (body.status === 'Closed') {
+        requireRole(user, ['QA', 'Admin']);
+        if (!n.closeout_evidence) throw new ApiError(422, 'Close-out evidence is required before closing an NCR.');
+        n.status = 'Closed'; n.signed_off_by = user.id; n.closed_at = now();
+        notify(membersByRole(n.project_id, ['QA', 'Engineer']), 'NCR_CLOSED', `${n.ncr_number} closed by ${user.name}`, 'ncr', n.id);
+      } else n.status = body.status;
+    }
+    save();
+    return { ncr: n };
+  });
+
+  function handoverIndex(pid, f) {
+    let wirs = all(DB.wirs, 'project_id', pid);
+    if (f.zone_id) wirs = wirs.filter((w) => w.zone_id === f.zone_id);
+    if (f.approved_only !== false) wirs = wirs.filter((w) => w.status === 'Approved');
+    if (f.from) wirs = wirs.filter((w) => w.inspection_date >= f.from);
+    if (f.to) wirs = wirs.filter((w) => w.inspection_date <= f.to);
+    wirs = wirs.slice().sort((a, b) => a.wir_number.localeCompare(b.wir_number)).map((w) => ({ ...w, zone_name: zoneName(w.zone_id), engineer_name: userName(w.engineer_id) }));
+    const wirIds = new Set(wirs.map((w) => w.id));
+    const results = [];
+    for (const tr of DB.test_requests.filter((t) => wirIds.has(t.wir_id))) {
+      for (const r of all(DB.test_results, 'tr_id', tr.id)) results.push({ tr_number: tr.tr_number, test_type: tr.test_type, sample_date: tr.sample_date, result_value: r.result_value, spec_limit: r.spec_limit, pass_fail: r.pass_fail, result_date: r.result_date, wir_number: (by(DB.wirs, 'id', tr.wir_id) || {}).wir_number });
+    }
+    const ncrs = all(DB.ncrs, 'project_id', pid).filter((n) => !n.wir_id || wirIds.has(n.wir_id)).map((n) => ({ ...n, wir_number: (by(DB.wirs, 'id', n.wir_id) || {}).wir_number || null }));
+    const ms = DB.method_statements.filter((m) => m.project_id === pid && m.status === 'Approved');
+    return { wirs, results, ncrs, ms };
+  }
+  route('GET', '/handover/preview', ({ query }) => {
+    const idx = handoverIndex(req0(query.project_id, 'project_id'), { zone_id: query.zone_id, approved_only: query.approved_only !== '0', from: query.from, to: query.to });
+    return { sections: [
+      { title: 'Work Inspection Requests', count: idx.wirs.length, items: idx.wirs.map((w) => `${w.wir_number} — ${w.description || w.activity_type} (${w.zone_name || ''})`) },
+      { title: 'Laboratory Test Results', count: idx.results.length, items: idx.results.map((r) => `${r.tr_number} ${r.test_type} = ${r.result_value} → ${r.pass_fail} (${r.wir_number})`) },
+      { title: 'Non-Conformance Reports', count: idx.ncrs.length, items: idx.ncrs.map((n) => `${n.ncr_number} [${n.status}] ${n.description.slice(0, 90)}`) },
+      { title: 'Method Statements', count: idx.ms.length, items: idx.ms.map((m) => `${m.ms_number} — ${m.title}`) },
+    ] };
+  });
+  route('POST', '/handover/generate', ({ user, body }) => {
+    const pid = req0(body.project_id, 'project_id');
+    const project = by(DB.projects, 'id', pid);
+    const idx = handoverIndex(pid, body.filters || {});
+    const e = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>QA Handover Pack — ${e(project.name)}</title>
+<style>body{font-family:Georgia,serif;color:#111;max-width:900px;margin:0 auto;padding:40px 30px;line-height:1.5}
+h1{font-size:30px;border-bottom:4px solid #0F1E38;padding-bottom:12px}h2{margin-top:44px;color:#0F1E38;border-bottom:1px solid #ccc;padding-bottom:6px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}th,td{border:1px solid #bbb;padding:6px 8px;text-align:left}th{background:#0F1E38;color:#fff}
+.cover{text-align:center;padding:110px 0}.cover h1{border:none;font-size:38px}.meta{color:#555}.pass{color:#166a34;font-weight:bold}.fail{color:#b91c1c;font-weight:bold}
+.wir{margin:22px 0;border:1px solid #ccc;padding:14px}</style></head><body>
+<div class="cover"><p class="meta">QUALITY ASSURANCE</p><h1>Handover Documentation Pack</h1>
+<p><b>${e(project.name)}</b><br>${e(project.location)}<br>Client: ${e(project.client)} · Contract: ${e(project.contract_no)}</p>
+<p class="meta">Generated ${today()} by ${e(user.name)} · WIRflow</p></div>
+<h2>1. Work Inspection Requests (${idx.wirs.length})</h2>
+${idx.wirs.map((w) => `<div class="wir"><h3>${e(w.wir_number)} — ${e(w.description || w.activity_type)}</h3>
+<table><tr><th>Zone</th><td>${e(w.zone_name)}</td><th>Status</th><td>${e(w.status)}</td></tr>
+<tr><th>Contractor</th><td>${e(w.contractor)}</td><th>Engineer</th><td>${e(w.engineer_name)}</td></tr></table></div>`).join('')}
+<h2>2. Laboratory Test Results (${idx.results.length})</h2>
+<table><tr><th>TR</th><th>Test</th><th>WIR</th><th>Result</th><th>Limit</th><th>Verdict</th></tr>
+${idx.results.map((r) => `<tr><td>${e(r.tr_number)}</td><td>${e(r.test_type)}</td><td>${e(r.wir_number)}</td><td>${e(r.result_value)}</td><td>${e(r.spec_limit)}</td><td class="${r.pass_fail === 'PASS' ? 'pass' : 'fail'}">${e(r.pass_fail)}</td></tr>`).join('')}</table>
+<h2>3. Non-Conformance Reports (${idx.ncrs.length})</h2>
+<table><tr><th>NCR</th><th>Description</th><th>Root cause</th><th>Corrective action</th><th>Status</th></tr>
+${idx.ncrs.map((n) => `<tr><td>${e(n.ncr_number)}</td><td>${e(n.description)}</td><td>${e(n.root_cause)}</td><td>${e(n.corrective_action)}</td><td>${e(n.status)}</td></tr>`).join('')}</table>
+<h2>4. Method Statements (${idx.ms.length})</h2>
+<table><tr><th>MS</th><th>Title</th><th>Activity type</th><th>Approved</th></tr>
+${idx.ms.map((m) => `<tr><td>${e(m.ms_number)}</td><td>${e(m.title)}</td><td>${e(m.activity_type)}</td><td>${e(m.approved_date)}</td></tr>`).join('')}</table>
+</body></html>`;
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    return { status: 201, url, counts: { wirs: idx.wirs.length, results: idx.results.length, ncrs: idx.ncrs.length, ms: idx.ms.length } };
+  });
+
+  route('GET', '/dashboard', ({ query }) => {
+    const pid = req0(query.project_id, 'project_id');
+    runChecks(pid); save();
+    const wirs = all(DB.wirs, 'project_id', pid);
+    const trs = all(DB.test_requests, 'project_id', pid);
+    const t = today();
+    return {
+      wirs: { total: wirs.length, approved: wirs.filter((w) => w.status === 'Approved').length, awaiting: wirs.filter((w) => ['Submitted', 'Under Review'].includes(w.status)).length, rejected: wirs.filter((w) => ['Rejected', 'Resubmit Required'].includes(w.status)).length },
+      trs: { pending: trs.filter((x) => x.status === 'Pending').length, overdue: trs.filter((x) => x.status === 'Pending' && ((x.due_7day && x.due_7day < t) || (x.due_28day && x.due_28day < t))).length, failed: trs.filter((x) => (latestResult(x.id) || {}).pass_fail === 'FAIL').length },
+      ncrs: { open: all(DB.ncrs, 'project_id', pid).filter((n) => n.status !== 'Closed').length },
+    };
+  });
+
+  /* ---------- fetch interceptor ---------- */
+  const realFetch = window.fetch.bind(window);
+  window.fetch = async function (url, opts = {}) {
+    const u = typeof url === 'string' ? url : url.url;
+    if (!u || !u.startsWith('/api/app')) return realFetch(url, opts);
+    const [pathname, qs] = u.split('?');
+    const sub = pathname.replace(/^\/api\/app/, '') || '/';
+    const query = Object.fromEntries(new URLSearchParams(qs || ''));
+    const method = (opts.method || 'GET').toUpperCase();
+    const headers = {};
+    for (const [k, v] of Object.entries(opts.headers || {})) headers[k.toLowerCase()] = v;
+    const respond = (status, obj) => new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
+    for (const r of routes) {
+      if (r.method !== method) continue;
+      const m = sub.match(r.rx); if (!m) continue;
+      const params = Object.fromEntries(r.keys.map((k, i) => [k, decodeURIComponent(m[i + 1])]));
+      try {
+        let user = null;
+        if (r.auth) {
+          const token = (headers.authorization || '').replace(/^Bearer /, '');
+          const s = by(DB.sessions, 'token', token);
+          user = s ? by(DB.users, 'id', s.user_id) : null;
+          if (!user) return respond(401, { error: 'Not authenticated.' });
+          user = { id: user.id, email: user.email, name: user.name, role: user.role };
+        }
+        let body = {};
+        if (opts.body && !r.raw) { try { body = JSON.parse(opts.body); } catch (e) { return respond(400, { error: 'Invalid JSON body.' }); } }
+        const out = await r.handler({ user, params, body, query, headers, raw: r.raw ? opts.body : null });
+        const status = out && out.status && Number.isInteger(out.status) && out.status >= 200 && out.status < 600 && Object.keys(out).length > 1 ? out.status : 200;
+        if (out && out.status && status !== 200) { const { status: _s, ...rest } = out; return respond(status, rest); }
+        return respond(200, out);
+      } catch (err) {
+        return respond(err.status || 500, { error: err.message || 'Internal error' });
+      }
+    }
+    return respond(404, { error: 'Unknown API route: ' + sub });
+  };
+})();
+</script>
+<script>'use strict';
+/* WIRflow SPA — all 15 blueprint modules. Vanilla JS, hash router, zero build step. */
+
+/* ================= core ================= */
+const API = '/api/app';
+const S = {
+  token: localStorage.getItem('wf_token') || null,
+  user: JSON.parse(localStorage.getItem('wf_user') || 'null'),
+  project: null,
+  projects: [],
+};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const fmtDate = (d) => (d ? String(d).slice(0, 10) : '—');
+const fmtTime = (d) => (d ? new Date(d).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }) : '');
+
+async function api(method, path, body) {
+  const opts = { method, headers: {} };
+  if (S.token) opts.headers.Authorization = 'Bearer ' + S.token;
+  if (body !== undefined) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  const r = await fetch(API + path, opts);
+  const data = await r.json().catch(() => ({}));
+  if (r.status === 401 && S.token) { logout(); throw new Error('Session expired — sign in again.'); }
+  if (!r.ok) throw new Error(data.error || 'Request failed (' + r.status + ')');
+  return data;
+}
+async function uploadFile(file) {
+  const r = await fetch(`${API}/upload?name=${encodeURIComponent(file.name)}`, {
+    method: 'POST', headers: { Authorization: 'Bearer ' + S.token }, body: file,
+  });
+  const d = await r.json();
+  if (!r.ok) throw new Error(d.error || 'Upload failed');
+  return d;
+}
+function toast(msg, kind) {
+  const t = document.createElement('div');
+  t.className = 'alert ' + (kind === 'err' ? 'a-red' : kind === 'warn' ? 'a-warn' : 'a-green');
+  t.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:999;max-width:420px;box-shadow:0 10px 30px rgba(0,0,0,.2)';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 5000);
+}
+
+/* ================= status badges ================= */
+const BADGE = {
+  'Draft': 'b-gray', 'Submitted': 'b-blue', 'Under Review': 'b-indigo', 'Approved': 'b-green',
+  'Rejected': 'b-red', 'Resubmit Required': 'b-amber', 'Pending': 'b-amber', 'Completed': 'b-green',
+  'Open': 'b-red', 'Closed': 'b-green', 'PASS': 'b-green', 'FAIL': 'b-red',
+};
+const badge = (s) => `<span class="badge ${BADGE[s] || 'b-gray'}">${esc(s || '—')}</span>`;
+const MCELL = { 'N/A': 'mc-na', 'Not Started': 'mc-not', 'Draft': 'mc-draft', 'Submitted': 'mc-sub', 'Under Review': 'mc-rev', 'Approved': 'mc-ok', 'Rejected': 'mc-rej', 'Resubmit Required': 'mc-rej', 'TR Pending': 'mc-tr' };
+
+/* ================= auth & shell ================= */
+function logout() {
+  if (S.token) api('POST', '/auth/logout').catch(() => {});
+  localStorage.removeItem('wf_token'); localStorage.removeItem('wf_user');
+  S.token = null; S.user = null;
+  showLogin();
+}
+function showLogin() { $('loginScreen').hidden = false; $('appShell').hidden = true; }
+async function showApp() {
+  $('loginScreen').hidden = true; $('appShell').hidden = false;
+  $('userName').textContent = S.user.name;
+  $('userRole').textContent = S.user.role;
+  const { projects } = await api('GET', '/projects');
+  S.projects = projects;
+  const saved = localStorage.getItem('wf_project');
+  S.project = projects.find((p) => p.id === saved) || projects[0] || null;
+  $('projectSelect').innerHTML = projects.map((p) => `<option value="${p.id}" ${S.project && p.id === S.project.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
+  pollNotifications();
+  render();
+}
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('loginError').textContent = '';
+  try {
+    const d = await api('POST', '/auth/login', { email: $('loginEmail').value, password: $('loginPassword').value });
+    S.token = d.token; S.user = d.user;
+    localStorage.setItem('wf_token', d.token); localStorage.setItem('wf_user', JSON.stringify(d.user));
+    location.hash = '#/dashboard';
+    showApp();
+  } catch (err) { $('loginError').textContent = err.message; }
+});
+$('logoutLink').addEventListener('click', (e) => { e.preventDefault(); logout(); });
+$('projectSelect').addEventListener('change', () => {
+  S.project = S.projects.find((p) => p.id === $('projectSelect').value);
+  localStorage.setItem('wf_project', S.project.id);
+  render();
+});
+
+/* ================= notifications (M11) ================= */
+let bellTimer = null;
+async function pollNotifications() {
+  clearTimeout(bellTimer);
+  try {
+    const q = S.project ? `?project_id=${S.project.id}` : '';
+    const d = await api('GET', '/notifications' + q);
+    $('bellCount').hidden = !d.unread;
+    $('bellCount').textContent = d.unread;
+    $('bellList').innerHTML = d.notifications.length ? d.notifications.map((n) => `
+      <div class="notif ${n.read_at ? '' : 'unread'}">
+        <div class="ntype" style="color:${/FAIL|OVERDUE|NCR_RAISED|REJECT/.test(n.type) ? 'var(--danger)' : /APPROVED|CLEARED|CLOSED/.test(n.type) ? 'var(--success)' : 'var(--accent)'}">${esc(n.type.replace(/_/g, ' '))}</div>
+        <div>${esc(n.message)}</div><div class="ntime">${fmtTime(n.sent_at)}</div>
+      </div>`).join('') : '<div class="notif muted">No notifications yet.</div>';
+  } catch (e) { /* not logged in yet */ }
+  bellTimer = setTimeout(pollNotifications, 30000);
+}
+$('bellBtn').addEventListener('click', () => { $('bellPanel').hidden = !$('bellPanel').hidden; });
+$('markAllRead').addEventListener('click', async () => { await api('POST', '/notifications/read', {}); pollNotifications(); });
+document.addEventListener('click', (e) => { if (!e.target.closest('.bell-wrap')) $('bellPanel').hidden = true; });
+
+/* ================= router ================= */
+const routes = {
+  dashboard: viewDashboard, matrix: viewMatrix, 'lab-matrix': viewLabMatrix,
+  wirs: viewWirs, 'wir': viewWirDetail, 'wir-new': viewWirNew,
+  trs: viewTrs, 'tr': viewTrDetail, 'tr-new': viewTrNew,
+  results: viewResults, fdt: viewFdt, ncrs: viewNcrs, ncr: viewNcrDetail,
+  drawings: viewDrawings, drawing: viewDrawingDetail, zones: viewZones, zone: viewZoneDetail,
+  programme: viewProgramme, 'method-statements': viewMs, handover: viewHandover, team: viewTeam,
+};
+function parseHash() {
+  const parts = (location.hash.replace(/^#\//, '') || 'dashboard').split('/');
+  if (parts[0] === 'wir' && parts[1] === 'new') return { view: 'wir-new' };
+  if (parts[0] === 'tr' && parts[1] === 'new') return { view: 'tr-new', arg: parts[2] };
+  if (parts[1]) return { view: parts[0], arg: parts[1] };
+  return { view: parts[0] };
+}
+async function render() {
+  if (!S.token || !S.user) return showLogin();
+  if (!S.project) { $('view').innerHTML = '<div class="card">No projects yet. Ask an Admin/QA to create one.</div>'; return; }
+  const { view, arg } = parseHash();
+  const fn = routes[view] || viewDashboard;
+  document.querySelectorAll('#sideNav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === view || (view === 'wir' && a.dataset.nav === 'wirs') || (view === 'tr' && a.dataset.nav === 'trs') || (view === 'ncr' && a.dataset.nav === 'ncrs') || (view === 'drawing' && a.dataset.nav === 'drawings') || (view === 'zone' && a.dataset.nav === 'zones')));
+  $('view').innerHTML = '<div class="muted">Loading…</div>';
+  try { await fn(arg); } catch (err) { $('view').innerHTML = `<div class="alert a-red">${esc(err.message)}</div>`; }
+}
+window.addEventListener('hashchange', render);
+const P = () => S.project.id;
+const setTitle = (t) => { $('pageTitle').textContent = t; };
+const canQA = () => ['QA', 'Admin'].includes(S.user.role);
+
+/* ================= dashboard ================= */
+async function viewDashboard() {
+  setTitle('Dashboard');
+  const [d, prog, wirs] = await Promise.all([
+    api('GET', `/dashboard?project_id=${P()}`),
+    api('GET', `/programme?project_id=${P()}`),
+    api('GET', `/wirs?project_id=${P()}`),
+  ]);
+  const flagged = prog.activities.filter((a) => a.flag);
+  const recent = wirs.wirs.slice(0, 6);
+  $('view').innerHTML = `
+  <div class="grid cols-4">
+    <div class="card stat blue"><div class="n">${d.wirs.awaiting}</div><div class="l">WIRs awaiting review</div></div>
+    <div class="card stat amber"><div class="n">${d.trs.pending}</div><div class="l">Test results pending</div></div>
+    <div class="card stat red"><div class="n">${d.trs.overdue + d.ncrs.open}</div><div class="l">Overdue results + open NCRs</div></div>
+    <div class="card stat green"><div class="n">${d.wirs.approved}/${d.wirs.total}</div><div class="l">WIRs approved</div></div>
+  </div>
+  <div class="grid cols-2" style="margin-top:16px">
+    <div class="card"><h3>⚠️ Upcoming inspections without WIR</h3>
+      ${flagged.length ? `<table class="tbl">${flagged.map((a) => `<tr><td>${esc(a.zone_name)}</td><td>${esc(a.name)}</td><td>${fmtDate(a.planned_start)}</td><td><span class="badge ${a.flag === 'WIR Overdue' ? 'b-red' : 'b-amber'}">${a.flag}</span></td></tr>`).join('')}</table>
+      <p class="small" style="margin-top:8px"><a href="#/wir/new">Raise a WIR →</a></p>` : '<p class="muted">All planned activities have WIRs. 👌</p>'}
+    </div>
+    <div class="card"><h3>Recent WIRs</h3>
+      <table class="tbl">${recent.map((w) => `<tr class="click" onclick="location.hash='#/wir/${w.id}'"><td><b>${esc(w.wir_number)}</b></td><td>${esc(w.zone_name || '')}</td><td>${badge(w.status)}</td><td class="small muted">${esc(w.engineer_name || '')}</td></tr>`).join('')}</table>
+    </div>
+  </div>`;
+}
+
+/* ================= M08 IR matrix ================= */
+async function viewMatrix() {
+  setTitle('IR Matrix — Zone × Activity');
+  const d = await api('GET', `/matrix?project_id=${P()}`);
+  const cellHtml = (z, t, c) => {
+    if (c.state === 'N/A') return `<span class="mcell mc-na">—</span>`;
+    const cls = MCELL[c.state] || 'mc-not';
+    const target = c.wirs.length === 1 ? `#/wir/${c.wirs[0].id}` : `#/wirs`;
+    const label = c.state + (c.tr_pending ? ` (${c.tr_pending} TR)` : '');
+    return `<a class="mcell ${cls}" href="${target}" title="${c.wirs.map((w) => w.wir_number).join(', ') || 'No WIR yet'}">${esc(label)}</a>`;
+  };
+  $('view').innerHTML = `
+  <div class="legend">
+    <span><span class="dot" style="background:#e5e7eb"></span>Not Started</span>
+    <span><span class="dot" style="background:#fef9c3"></span>Draft</span>
+    <span><span class="dot" style="background:#dbeafe"></span>Submitted</span>
+    <span><span class="dot" style="background:#e0e7ff"></span>Under Review</span>
+    <span><span class="dot" style="background:#bbf7d0"></span>Approved</span>
+    <span><span class="dot" style="background:#fecaca"></span>Rejected</span>
+    <span><span class="dot" style="background:#fed7aa"></span>TR Pending</span>
+  </div>
+  <div class="card matrix-wrap"><table class="matrix">
+    <tr><th>Zone</th>${d.activity_types.map((t) => `<th>${esc(t)}</th>`).join('')}</tr>
+    ${d.grid.map((row) => `<tr>
+      <td class="zone-cell">${esc(row.zone.name)}<div class="prog-outer"><div class="prog-inner" style="width:${row.progress}%"></div></div><span class="small muted">${row.progress}% approved</span></td>
+      ${d.activity_types.map((t) => `<td>${cellHtml(row.zone, t, row.cells[t])}</td>`).join('')}
+    </tr>`).join('')}
+  </table></div>`;
+}
+
+/* ================= M09 lab matrix ================= */
+async function viewLabMatrix() {
+  setTitle('Lab Test Matrix');
+  const d = await api('GET', `/lab-matrix?project_id=${P()}`);
+  const cell = (c) => {
+    const cls = c.state === 'PASS' ? 'mc-ok' : c.state === 'FAIL' ? 'mc-rej' : c.state === 'Pending' ? 'mc-draft' : 'mc-na';
+    const first = c.trs[0];
+    const href = first ? `#/tr/${first.id}` : null;
+    const label = c.state === 'N/A' ? '—' : c.state;
+    return href ? `<a class="mcell ${cls}" href="${href}" title="${c.trs.map((t) => t.tr_number).join(', ')}">${label}</a>` : `<span class="mcell ${cls}">${label}</span>`;
+  };
+  $('view').innerHTML = `
+  <div class="card matrix-wrap"><table class="matrix">
+    <tr><th>WIR / Activity</th>${d.columns.map((c) => `<th>${esc(c)}</th>`).join('')}</tr>
+    ${d.rows.map((r) => `<tr>
+      <td class="zone-cell"><a href="#/wir/${r.wir.id}"><b>${esc(r.wir.wir_number)}</b></a><br><span class="small muted">${esc(r.wir.zone_name || '')} · ${esc(r.wir.activity_type || '')}</span></td>
+      ${d.columns.map((c) => `<td>${cell(r.cells[c])}</td>`).join('')}
+    </tr>`).join('')}
+    <tr><td class="zone-cell"><b>Pass rate</b></td>${d.columns.map((c) => {
+      const s = d.summary[c];
+      return `<td class="small" style="text-align:center">${s.done ? Math.round(100 * s.pass / s.done) + '%' : '—'}<br><span class="muted">${s.done}/${s.total} done</span></td>`;
+    }).join('')}</tr>
+  </table></div>`;
+}
+
+/* ================= M04 WIR tracker ================= */
+async function viewWirs() {
+  setTitle('Work Inspection Requests');
+  const zones = (await api('GET', `/zones?project_id=${P()}`)).zones;
+  const qStatus = sessionStorage.getItem('wf_wir_status') || '';
+  const qZone = sessionStorage.getItem('wf_wir_zone') || '';
+  const q = `?project_id=${P()}` + (qStatus ? `&status=${encodeURIComponent(qStatus)}` : '') + (qZone ? `&zone_id=${qZone}` : '');
+  const d = await api('GET', '/wirs' + q);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>WIRs (${d.wirs.length})</h2>
+    <div class="filters">
+      <select id="fStatus"><option value="">All statuses</option>${['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Resubmit Required'].map((s) => `<option ${s === qStatus ? 'selected' : ''}>${s}</option>`).join('')}</select>
+      <select id="fZone"><option value="">All zones</option>${zones.map((z) => `<option value="${z.id}" ${z.id === qZone ? 'selected' : ''}>${esc(z.name)}</option>`).join('')}</select>
+      <a class="btn btn-cta btn-sm" href="#/wir/new">+ New WIR</a>
+    </div></div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>WIR #</th><th>Date</th><th>Zone</th><th>Activity</th><th>Status</th><th>Tests</th><th>NCR</th><th>Engineer</th></tr>
+    ${d.wirs.map((w) => `<tr class="click" onclick="location.hash='#/wir/${w.id}'">
+      <td><b>${esc(w.wir_number)}</b></td><td>${fmtDate(w.inspection_date)}</td><td>${esc(w.zone_name || '—')}</td>
+      <td>${esc(w.description || w.activity_type || '')}</td><td>${badge(w.status)}</td>
+      <td>${w.tr_total ? `${w.tr_total - w.tr_pending}/${w.tr_total}${w.tr_failed ? ` <span class="badge b-red">${w.tr_failed} fail</span>` : ''}${w.tr_pending ? ` <span class="badge b-amber">${w.tr_pending} pending</span>` : ''}` : '<span class="muted">—</span>'}</td>
+      <td>${w.ncr_open ? `<span class="badge b-red">${w.ncr_open} open</span>` : '—'}</td>
+      <td class="small">${esc(w.engineer_name || '')}</td></tr>`).join('')}
+  </table></div>`;
+  $('fStatus').onchange = (e) => { sessionStorage.setItem('wf_wir_status', e.target.value); render(); };
+  $('fZone').onchange = (e) => { sessionStorage.setItem('wf_wir_zone', e.target.value); render(); };
+}
+
+async function viewWirDetail(id) {
+  const { wir: w } = await api('GET', `/wirs/${id}`);
+  setTitle(w.wir_number);
+  const actions = [];
+  if (w.status === 'Draft' && (S.user.id === w.engineer_id || canQA())) actions.push(['Submitted', 'Submit', 'btn-cta']);
+  if (canQA()) {
+    if (w.status === 'Submitted') actions.push(['Under Review', 'Start Review', 'btn-navy']);
+    if (['Submitted', 'Under Review'].includes(w.status)) {
+      actions.push(['Approved', 'Approve', 'btn-cta'], ['Rejected', 'Reject', 'btn-danger'], ['Resubmit Required', 'Request Resubmission', 'btn-outline']);
+    }
+  }
+  if (['Rejected', 'Resubmit Required'].includes(w.status) && (S.user.id === w.engineer_id || canQA())) actions.push(['Submitted', 'Resubmit', 'btn-cta']);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(w.wir_number)} ${badge(w.status)}</h2>
+    <div>${actions.map(([st, label, cls]) => `<button class="btn ${cls} btn-sm" data-status="${st}" ${st === 'Approved' && w.approval_blockers.length ? 'disabled title="' + esc(w.approval_blockers.join('; ')) + '"' : ''}>${label}</button>`).join(' ')}</div></div>
+  ${w.approval_blockers.length ? `<div class="alert a-warn"><b>Cannot approve:</b> ${esc(w.approval_blockers.join(' · '))}</div>` : ''}
+  <div class="grid cols-2">
+    <div class="card"><h3>Details</h3><table class="tbl">
+      <tr><td class="muted">Description</td><td>${esc(w.description || '—')}</td></tr>
+      <tr><td class="muted">Zone</td><td>${esc(w.zone_name || '—')}</td></tr>
+      <tr><td class="muted">Activity</td><td>${esc(w.activity_name || w.activity_type || '—')} (${esc(w.activity_type)})</td></tr>
+      <tr><td class="muted">Location</td><td>${esc(w.location || '—')}</td></tr>
+      <tr><td class="muted">Contractor</td><td>${esc(w.contractor || '—')}</td></tr>
+      <tr><td class="muted">Inspection date</td><td>${fmtDate(w.inspection_date)}</td></tr>
+      <tr><td class="muted">Engineer</td><td>${esc(w.engineer_name || '—')}</td></tr></table>
+      <h3 style="margin-top:14px">Checklist</h3>
+      <table class="tbl">${w.checklist.map((c) => `<tr><td>${esc(c.item)}</td><td>${badge(c.result === 'Pass' ? 'PASS' : c.result === 'Fail' ? 'FAIL' : c.result)}</td></tr>`).join('') || '<tr><td class="muted">No checklist recorded</td></tr>'}</table>
+      ${w.remarks ? `<p class="small" style="margin-top:8px"><b>Remarks:</b> ${esc(w.remarks)}</p>` : ''}
+    </div>
+    <div>
+      <div class="card"><h3>Attached drawings (${w.drawings.length})</h3>
+        ${w.drawings.map((dr) => `<div style="padding:5px 0;border-bottom:1px solid #f0f2f5"><a href="#/drawing/${dr.id}"><b>${esc(dr.drawing_number)}</b></a> ${esc(dr.revision)} <span class="small muted">${esc(dr.title || '')}</span></div>`).join('') || '<p class="muted">None attached.</p>'}
+      </div>
+      <div class="card" style="margin-top:14px"><h3>Lab tests (${w.trs.length})
+        <a class="btn btn-outline btn-sm" style="float:right" href="#/tr/new/${w.id}">+ Test Request</a></h3>
+        <table class="tbl">${w.trs.map((t) => `<tr class="click" onclick="location.hash='#/tr/${t.id}'"><td><b>${esc(t.tr_number)}</b></td><td>${esc(t.test_type)}</td><td>${t.pass_fail ? badge(t.pass_fail) : badge('Pending')}</td><td class="small muted">${t.due_28day ? '28d due ' + fmtDate(t.due_28day) : ''}</td></tr>`).join('') || '<tr><td class="muted">No test requests.</td></tr>'}</table>
+      </div>
+      <div class="card" style="margin-top:14px"><h3>NCRs (${w.ncrs.length})</h3>
+        ${w.ncrs.map((n) => `<div style="padding:5px 0"><a href="#/ncr/${n.id}"><b>${esc(n.ncr_number)}</b></a> ${badge(n.status)} <span class="small muted">${esc(n.description.slice(0, 80))}</span></div>`).join('') || '<p class="muted">None.</p>'}
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px"><h3>Timeline & comments</h3>
+    <div class="timeline">${w.comments.map((c) => `<div class="tl-item"><b>${esc(c.user_name || 'System')}</b> <span class="muted small">${fmtTime(c.created_at)}</span><br>${c.status_change ? badge(c.status_change) + ' ' : ''}${esc(c.text)}</div>`).join('') || '<p class="muted">No activity yet.</p>'}</div>
+    <form id="commentForm" style="display:flex;gap:8px"><input id="commentText" placeholder="Add a comment…" style="flex:1;padding:9px;border:1px solid var(--border);border-radius:9px"><button class="btn btn-navy btn-sm">Post</button></form>
+  </div>`;
+  document.querySelectorAll('[data-status]').forEach((b) => b.addEventListener('click', async () => {
+    const status = b.dataset.status;
+    let comment;
+    if (['Rejected', 'Resubmit Required'].includes(status)) comment = prompt('Reason for ' + status + ':') || undefined;
+    try {
+      await api('PATCH', `/wirs/${id}/status`, { status, comment });
+      toast(`${w.wir_number} → ${status}`);
+      render(); pollNotifications();
+    } catch (err) { toast(err.message, 'err'); }
+  }));
+  $('commentForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!$('commentText').value.trim()) return;
+    await api('POST', `/wirs/${id}/comments`, { text: $('commentText').value.trim() });
+    render();
+  });
+}
+
+/* ================= M03 WIR form ================= */
+async function viewWirNew() {
+  setTitle('New WIR');
+  const ctx = await api('GET', `/wir-form-context?project_id=${P()}`);
+  const prog = await api('GET', `/programme?project_id=${P()}`);
+  const CHECKLIST = ['Work matches latest drawing revision', 'Materials approved and undamaged', 'Setting out / levels checked', 'Safety access in place', 'Housekeeping acceptable'];
+  const TESTS = ['Slump', 'Concrete Cube C25', 'Concrete Cube C30', 'Concrete Cube C40', 'FDT', 'Steel Tensile'];
+  let selectedDrawings = []; // {id, label}
+  $('view').innerHTML = `
+  <div class="card" style="max-width:860px">
+    <h3>Work Inspection Request — ${esc(ctx.next_wir_number)}</h3>
+    <div id="msWarning"></div>
+    <div class="frow">
+      <div class="field"><label>Zone</label><select id="wZone"><option value="">Select zone…</option>${ctx.zones.map((z) => `<option value="${z.id}">${esc(z.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Activity type</label><select id="wType">${ctx.activity_types.map((t) => `<option>${esc(t)}</option>`).join('')}</select></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Programme activity (optional)</label><select id="wActivity"><option value="">—</option></select></div>
+      <div class="field"><label>Inspection date</label><input type="date" id="wDate" value="${new Date().toISOString().slice(0, 10)}"></div>
+    </div>
+    <div class="field"><label>Description of work</label><input id="wDesc" placeholder="e.g. GF slab pour 420m³ C40 — grid A1-F6"></div>
+    <div class="frow">
+      <div class="field"><label>Location / grid ref</label><input id="wLoc" placeholder="A1-F6"></div>
+      <div class="field"><label>Contractor</label><input id="wContractor" placeholder="Gulf Build LLC"></div>
+    </div>
+    <div class="field"><label>Drawings <span class="muted small">(zone selection auto-suggests — type to search all)</span></label>
+      <input id="wDrawSearch" placeholder="Search drawing number…">
+      <div id="wDrawResults" class="chips"></div>
+      <div class="small muted" style="margin-top:6px">Attached:</div>
+      <div id="wDrawSelected" class="chips"></div>
+    </div>
+    <div class="field"><label>Checklist</label>
+      <table class="tbl">${CHECKLIST.map((c, i) => `<tr><td>${esc(c)}</td><td style="white-space:nowrap">
+        ${['Pass', 'Fail', 'N/A'].map((r) => `<label style="margin-right:10px;font-weight:400"><input type="radio" name="chk${i}" value="${r}" ${r === 'Pass' ? 'checked' : ''}> ${r}</label>`).join('')}
+      </td></tr>`).join('')}</table>
+    </div>
+    <div class="field"><label>Lab tests required <span class="muted small">(TRs auto-created on submit)</span></label>
+      <div class="chips">${TESTS.map((t) => `<span class="chip test-chip" data-test="${esc(t)}">${esc(t)}</span>`).join('')}</div>
+    </div>
+    <div class="field"><label>Remarks</label><textarea id="wRemarks" rows="2"></textarea></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-cta" id="wSubmit">Submit WIR</button>
+      <button class="btn btn-outline" id="wDraft">Save as Draft</button>
+    </div>
+  </div>`;
+
+  const renderSelected = () => {
+    $('wDrawSelected').innerHTML = selectedDrawings.map((d) => `<span class="chip on" data-id="${d.id}">${esc(d.label)}<span class="x">×</span></span>`).join('') || '<span class="muted small">none yet</span>';
+    $('wDrawSelected').querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => {
+      selectedDrawings = selectedDrawings.filter((d) => d.id !== c.dataset.id); renderSelected();
+    }));
+  };
+  renderSelected();
+  const addDrawing = (d) => {
+    if (!selectedDrawings.some((x) => x.id === d.id)) selectedDrawings.push({ id: d.id, label: `${d.drawing_number} ${d.revision}` });
+    renderSelected();
+  };
+  // M13→M03: zone auto-suggest + filter programme activities
+  $('wZone').addEventListener('change', async () => {
+    const zid = $('wZone').value;
+    $('wActivity').innerHTML = '<option value="">—</option>' + prog.activities.filter((a) => a.zone_id === zid).map((a) => `<option value="${a.id}" data-type="${esc(a.type)}">${esc(a.name)} (${fmtDate(a.planned_start)})</option>`).join('');
+    if (!zid) return;
+    const d = await api('GET', `/zones/${zid}/drawings`);
+    d.drawings.forEach(addDrawing);
+    if (d.drawings.length) toast(`${d.drawings.length} drawing(s) auto-suggested for this zone`);
+  });
+  $('wActivity').addEventListener('change', (e) => {
+    const t = e.target.selectedOptions[0] && e.target.selectedOptions[0].dataset.type;
+    if (t) { $('wType').value = t; $('wType').dispatchEvent(new Event('change')); }
+  });
+  // M02→M03: live drawing search
+  let searchTimer;
+  $('wDrawSearch').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(async () => {
+      const q = $('wDrawSearch').value.trim();
+      if (!q) { $('wDrawResults').innerHTML = ''; return; }
+      const d = await api('GET', `/drawings?project_id=${P()}&q=${encodeURIComponent(q)}`);
+      $('wDrawResults').innerHTML = d.drawings.slice(0, 8).map((dr) => `<span class="chip" data-id="${dr.id}" data-num="${esc(dr.drawing_number)}" data-rev="${esc(dr.revision)}">${esc(dr.drawing_number)} ${esc(dr.revision)}</span>`).join('') || '<span class="muted small">no matches</span>';
+      $('wDrawResults').querySelectorAll('.chip').forEach((c) => c.addEventListener('click', () => addDrawing({ id: c.dataset.id, drawing_number: c.dataset.num, revision: c.dataset.rev })));
+    }, 250);
+  });
+  // M10 gate warning
+  const msCheck = () => {
+    const gate = ctx.ms_status[$('wType').value];
+    $('msWarning').innerHTML = gate && !gate.approved
+      ? `<div class="alert a-warn">⚠️ No approved Method Statement for <b>${esc($('wType').value)}</b>${gate.ms ? ` (${esc(gate.ms.ms_number)} is ${esc(gate.ms.status)})` : ''}. You can save a Draft but not submit.</div>`
+      : '';
+  };
+  $('wType').addEventListener('change', msCheck); msCheck();
+
+  const save = async (status) => {
+    const checklist = CHECKLIST.map((item, i) => ({ item, result: (document.querySelector(`input[name=chk${i}]:checked`) || {}).value || 'N/A' }));
+    const tests = [...document.querySelectorAll('.test-chip.on')].map((c) => c.dataset.test);
+    try {
+      const d = await api('POST', '/wirs', {
+        project_id: P(), zone_id: $('wZone').value || null, activity_id: $('wActivity').value || null,
+        activity_type: $('wType').value, description: $('wDesc').value, location: $('wLoc').value,
+        contractor: $('wContractor').value, inspection_date: $('wDate').value,
+        checklist, drawing_ids: selectedDrawings.map((x) => x.id), tests_required: tests, remarks: $('wRemarks').value,
+        status,
+      });
+      toast(`${d.wir.wir_number} ${status === 'Submitted' ? 'submitted' : 'saved as draft'}${d.spawned_trs.length ? ' · TRs: ' + d.spawned_trs.join(', ') : ''}`);
+      location.hash = `#/wir/${d.wir.id}`;
+    } catch (err) { toast(err.message, 'err'); }
+  };
+  document.querySelectorAll('.test-chip').forEach((c) => c.addEventListener('click', () => c.classList.toggle('on')));
+  $('wSubmit').addEventListener('click', () => save('Submitted'));
+  $('wDraft').addEventListener('click', () => save('Draft'));
+}
+
+/* ================= M05 test requests ================= */
+async function viewTrs() {
+  setTitle('Test Requests');
+  const d = await api('GET', `/trs?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Test Requests (${d.trs.length})</h2><a class="btn btn-cta btn-sm" href="#/tr/new">+ New TR</a></div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>TR #</th><th>Test</th><th>WIR</th><th>Sample date</th><th>Due</th><th>Status</th><th>Result</th></tr>
+    ${d.trs.map((t) => `<tr class="click" onclick="location.hash='#/tr/${t.id}'">
+      <td><b>${esc(t.tr_number)}</b></td><td>${esc(t.test_type)}</td><td>${esc(t.wir_number || '—')}</td>
+      <td>${fmtDate(t.sample_date)}</td>
+      <td>${t.overdue ? `<span class="badge b-red">OVERDUE ${fmtDate(t.due)}</span>` : fmtDate(t.due)}</td>
+      <td>${badge(t.status)}</td><td>${t.pass_fail ? badge(t.pass_fail) : '—'}</td></tr>`).join('')}
+  </table></div>`;
+}
+async function viewTrNew(wirId) {
+  setTitle('New Test Request');
+  const specs = await api('GET', '/specs');
+  const wirs = await api('GET', `/wirs?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="card" style="max-width:640px"><h3>Test Request</h3>
+    <div class="field"><label>Parent WIR</label><select id="tWir"><option value="">— standalone —</option>${wirs.wirs.map((w) => `<option value="${w.id}" ${w.id === wirId ? 'selected' : ''}>${esc(w.wir_number)} — ${esc(w.description || w.activity_type || '')}</option>`).join('')}</select></div>
+    <div class="frow">
+      <div class="field"><label>Test type</label><select id="tType">${specs.test_types.map((t) => `<option>${esc(t)}</option>`).join('')}</select></div>
+      <div class="field"><label>Sample date</label><input type="date" id="tDate" value="${new Date().toISOString().slice(0, 10)}"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Location</label><input id="tLoc"></div>
+      <div class="field"><label>Sample count</label><input type="number" id="tCount" value="3"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Spec reference</label><input id="tSpec" placeholder="e.g. C40 / target 160mm"></div>
+      <div class="field"><label>Lab name</label><input id="tLab" value="Gulf Lab Services"></div>
+    </div>
+    <div id="tFdtExtra" class="frow" hidden>
+      <div class="field"><label>Layer number</label><input type="number" id="tLayer" value="1"></div>
+      <div class="field"><label>Area compacted (m²)</label><input type="number" id="tArea"></div>
+    </div>
+    <div id="tHint" class="alert a-blue" hidden></div>
+    <div class="field"><label>Notes</label><textarea id="tNotes" rows="2"></textarea></div>
+    <button class="btn btn-cta" id="tSave">Create TR</button>
+  </div>`;
+  const hint = () => {
+    const t = $('tType').value;
+    $('tFdtExtra').hidden = t !== 'FDT';
+    const s = specs.specs[t];
+    if (/Concrete Cube/.test(t)) { $('tHint').hidden = false; $('tHint').textContent = `7-day and 28-day result due dates will be scheduled automatically. Spec: min ${s.limit} ${s.unit}.`; }
+    else if (s && s.limit != null) { $('tHint').hidden = false; $('tHint').textContent = `Spec: ${s.rule === 'tolerance' ? '±' : 'min '}${s.limit} ${s.unit}${s.note ? ' (' + s.note + ')' : ''}.`; }
+    else $('tHint').hidden = true;
+  };
+  $('tType').addEventListener('change', hint); hint();
+  $('tSave').addEventListener('click', async () => {
+    try {
+      const d = await api('POST', '/trs', {
+        project_id: P(), wir_id: $('tWir').value || null, test_type: $('tType').value,
+        sample_date: $('tDate').value, location: $('tLoc').value, sample_count: Number($('tCount').value) || null,
+        spec_reference: $('tSpec').value, lab_name: $('tLab').value, notes: $('tNotes').value,
+        layer_no: $('tFdtExtra').hidden ? null : Number($('tLayer').value), area_m2: $('tFdtExtra').hidden ? null : Number($('tArea').value) || null,
+      });
+      toast(`${d.tr.tr_number} created${d.tr.due_7day ? ` · results due ${fmtDate(d.tr.due_7day)} / ${fmtDate(d.tr.due_28day)}` : ''}`);
+      location.hash = `#/tr/${d.tr.id}`;
+    } catch (err) { toast(err.message, 'err'); }
+  });
+}
+async function viewTrDetail(id) {
+  const { tr } = await api('GET', `/trs/${id}`);
+  setTitle(tr.tr_number);
+  const latest = tr.results[0];
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(tr.tr_number)} ${badge(tr.status)}</h2>
+    ${tr.status === 'Pending' ? `<a class="btn btn-cta btn-sm" href="#/results" onclick="sessionStorage.setItem('wf_result_tr','${tr.id}')">Enter Result</a>` : ''}</div>
+  <div class="grid cols-2">
+    <div class="card"><h3>Request</h3><table class="tbl">
+      <tr><td class="muted">Test type</td><td>${esc(tr.test_type)}</td></tr>
+      <tr><td class="muted">Parent WIR</td><td>${tr.wir_id ? `<a href="#/wir/${tr.wir_id}">${esc(tr.wir_number)}</a>` : '—'}</td></tr>
+      <tr><td class="muted">Sample date</td><td>${fmtDate(tr.sample_date)}</td></tr>
+      ${tr.due_7day ? `<tr><td class="muted">7-day due</td><td>${fmtDate(tr.due_7day)}</td></tr><tr><td class="muted">28-day due</td><td>${fmtDate(tr.due_28day)}</td></tr>` : ''}
+      ${tr.layer_no ? `<tr><td class="muted">Layer / area</td><td>Layer ${tr.layer_no} · ${tr.area_m2 || '?'} m²</td></tr>` : ''}
+      <tr><td class="muted">Spec ref</td><td>${esc(tr.spec_reference || '—')}</td></tr>
+      <tr><td class="muted">Lab</td><td>${esc(tr.lab_name || '—')}</td></tr>
+      <tr><td class="muted">Spec limit</td><td>${tr.spec && tr.spec.limit != null ? `${tr.spec.rule === 'tolerance' ? '±' : 'min '}${tr.spec.limit} ${tr.spec.unit}` : '—'}</td></tr>
+    </table>${tr.notes ? `<p class="small" style="margin-top:8px">${esc(tr.notes)}</p>` : ''}</div>
+    <div class="card"><h3>Results</h3>
+      ${latest ? `<div class="pass-big ${latest.pass_fail === 'PASS' ? 'pass' : 'fail'}">${latest.result_value} → ${latest.pass_fail}</div>
+        <p class="small muted">vs limit ${latest.spec_limit ?? '—'} · ${fmtDate(latest.result_date)} · by ${esc(latest.entered_by_name || '')}</p>
+        ${latest.report_url ? `<p><a href="${esc(latest.report_url)}" target="_blank">Lab report ↗</a></p>` : ''}` : '<p class="muted">Awaiting result.</p>'}
+      ${tr.results.length > 1 ? `<h3 style="margin-top:12px">History</h3><table class="tbl">${tr.results.map((r) => `<tr><td>${r.result_value}</td><td>${badge(r.pass_fail)}</td><td>${fmtDate(r.result_date)}</td></tr>`).join('')}</table>` : ''}
+    </div>
+  </div>`;
+}
+
+/* ================= M06 results desk ================= */
+async function viewResults() {
+  setTitle('Lab Results Desk');
+  const d = await api('GET', `/trs?project_id=${P()}&status=Pending`);
+  const specs = await api('GET', '/specs');
+  const preselect = sessionStorage.getItem('wf_result_tr'); sessionStorage.removeItem('wf_result_tr');
+  const rows = d.trs;
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Pending results (${rows.length})</h2></div>
+  <div class="grid cols-2">
+    <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+      <tr><th>TR</th><th>Test</th><th>WIR</th><th>Due</th><th></th></tr>
+      ${rows.map((t) => `<tr ${t.overdue ? 'style="background:#fff5f5"' : ''}>
+        <td><b>${esc(t.tr_number)}</b></td><td>${esc(t.test_type)}</td><td>${esc(t.wir_number || '—')}</td>
+        <td>${t.overdue ? `<span class="badge b-red">OVERDUE</span>` : fmtDate(t.due)}</td>
+        <td><button class="btn btn-outline btn-sm pick" data-id="${t.id}">Enter</button></td></tr>`).join('') || '<tr><td colspan="5" class="muted">Nothing pending. 🎉</td></tr>'}
+    </table></div>
+    <div class="card" id="entryCard"><h3>Enter result</h3><p class="muted">Pick a TR from the list.</p></div>
+  </div>`;
+  const openEntry = (trId) => {
+    const t = rows.find((x) => x.id === trId);
+    if (!t) return;
+    const spec = specs.specs[t.test_type] || {};
+    $('entryCard').innerHTML = `<h3>Enter result — ${esc(t.tr_number)}</h3>
+      <p class="small muted">${esc(t.test_type)} · ${t.wir_number ? 'for ' + esc(t.wir_number) : 'standalone'}</p>
+      <div class="alert a-blue">Spec: ${spec.limit != null ? `${spec.rule === 'tolerance' ? '±' : 'min '}${spec.limit} ${spec.unit}` : 'record only'}${spec.note ? ' · ' + spec.note : ''}</div>
+      <div class="frow">
+        <div class="field"><label>Result value</label><input type="number" step="0.1" id="rValue" autofocus></div>
+        <div class="field"><label>Spec limit override</label><input type="number" step="0.1" id="rLimit" placeholder="${spec.limit ?? ''}"></div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Result date</label><input type="date" id="rDate" value="${new Date().toISOString().slice(0, 10)}"></div>
+        <div class="field"><label>Lab report (PDF)</label><input type="file" id="rFile" accept=".pdf"></div>
+      </div>
+      <button class="btn btn-cta" id="rSave">Save Result</button>
+      <div id="rOutcome"></div>`;
+    $('rSave').addEventListener('click', async () => {
+      try {
+        let report_url = null;
+        const f = $('rFile').files[0];
+        if (f) report_url = (await uploadFile(f)).url;
+        const body = { result_value: Number($('rValue').value), result_date: $('rDate').value, report_url };
+        if ($('rLimit').value) body.spec_limit = Number($('rLimit').value);
+        const res = await api('POST', `/trs/${trId}/result`, body);
+        if (res.pass_fail === 'FAIL') {
+          $('rOutcome').innerHTML = `<div class="alert a-red" style="margin-top:12px"><b>FAIL</b> — ${esc(res.spec_detail)}.<br>
+            <b>${esc(res.ncr.ncr_number)}</b> has been auto-raised and the QA manager notified. ${res.ncr.wir_id ? 'WIR approval is now blocked.' : ''}<br>
+            <a href="#/ncr/${res.ncr.id}">Open NCR →</a></div>`;
+        } else {
+          $('rOutcome').innerHTML = `<div class="alert a-green" style="margin-top:12px"><b>PASS</b> — ${esc(res.spec_detail)}.</div>`;
+          setTimeout(render, 1600);
+        }
+        pollNotifications();
+      } catch (err) { toast(err.message, 'err'); }
+    });
+  };
+  document.querySelectorAll('.pick').forEach((b) => b.addEventListener('click', () => openEntry(b.dataset.id)));
+  if (preselect) openEntry(preselect);
+}
+
+/* ================= M07 FDT tracker ================= */
+async function viewFdt() {
+  setTitle('FDT Frequency Tracker');
+  const d = await api('GET', `/fdt?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="alert a-blue">Rule: required FDTs = ⌈area ÷ ${d.area_per_test} m²⌉ per layer per zone.</div>
+  <div class="grid cols-2">
+    <div class="card"><h3>Coverage by zone / layer</h3>
+      <table class="tbl"><tr><th>Zone</th><th>Layer</th><th>Area m²</th><th>Required</th><th>Done</th><th>Status</th></tr>
+      ${d.summary.map((s) => `<tr><td>${esc(s.zone_name)}</td><td>${s.layer_no}</td><td>${s.area_m2 || '—'}</td><td>${s.required}</td><td>${s.done}${s.failed ? ` <span class="badge b-red">${s.failed} fail</span>` : ''}</td>
+        <td>${s.deficient ? '<span class="badge b-red">Deficient</span>' : '<span class="badge b-green">Sufficient</span>'}</td></tr>`).join('') || '<tr><td colspan="6" class="muted">No FDT logs yet.</td></tr>'}
+      </table>
+      <p class="small muted" style="margin-top:8px">Deficient coverage blocks approval of Backfill WIRs in that zone.</p>
+    </div>
+    <div class="card"><h3>FDT log</h3>
+      <table class="tbl"><tr><th>TR</th><th>Zone</th><th>Layer</th><th>Result % MDD</th><th></th></tr>
+      ${d.logs.map((l) => `<tr class="click" onclick="location.hash='#/tr/${l.id}'"><td><b>${esc(l.tr_number)}</b></td><td>${esc(l.zone_name)}</td><td>${l.layer_no}</td>
+        <td>${l.result_value != null ? l.result_value + '% ' + badge(l.pass_fail) : badge('Pending')}</td><td class="small muted">${esc(l.wir_number)}</td></tr>`).join('')}
+      </table>
+      <p style="margin-top:10px"><a class="btn btn-outline btn-sm" href="#/tr/new">+ Log FDT (new TR, type FDT)</a></p>
+    </div>
+  </div>`;
+}
+
+/* ================= M15 NCRs ================= */
+async function viewNcrs() {
+  setTitle('Non-Conformance Reports');
+  const d = await api('GET', `/ncrs?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>NCRs (${d.ncrs.length})</h2><button class="btn btn-cta btn-sm" id="newNcr">+ Raise NCR</button></div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>NCR #</th><th>Source</th><th>Description</th><th>Status</th><th>Raised</th><th>Closed</th></tr>
+    ${d.ncrs.map((n) => `<tr class="click" onclick="location.hash='#/ncr/${n.id}'">
+      <td><b>${esc(n.ncr_number)}</b></td><td>${esc(n.tr_number || n.wir_number || n.source_type)}</td>
+      <td>${esc(n.description.slice(0, 90))}</td><td>${badge(n.status)}</td>
+      <td>${fmtDate(n.raised_at)}</td><td>${fmtDate(n.closed_at)}</td></tr>`).join('')}
+  </table></div>`;
+  $('newNcr').addEventListener('click', async () => {
+    const description = prompt('Non-conformance description:');
+    if (!description) return;
+    const d2 = await api('POST', '/ncrs', { project_id: P(), description, source_type: 'Manual' });
+    location.hash = `#/ncr/${d2.ncr.id}`;
+  });
+}
+async function viewNcrDetail(id) {
+  const { ncr: n } = await api('GET', `/ncrs/${id}`);
+  setTitle(n.ncr_number);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(n.ncr_number)} ${badge(n.status)}</h2>
+    <div>${n.status === 'Open' ? '<button class="btn btn-navy btn-sm" id="nReview">Move to Under Review</button>' : ''}
+    ${n.status !== 'Closed' && canQA() ? '<button class="btn btn-cta btn-sm" id="nClose">Close NCR</button>' : ''}</div></div>
+  <div class="grid cols-2">
+    <div class="card"><h3>Non-conformance</h3>
+      <p>${esc(n.description)}</p>
+      <table class="tbl" style="margin-top:10px">
+        <tr><td class="muted">Source</td><td>${n.tr_number ? `TR ${esc(n.tr_number)}` : esc(n.source_type)}${n.wir_number ? ` · <a href="#/wir/${n.wir_id}">${esc(n.wir_number)}</a>` : ''}</td></tr>
+        <tr><td class="muted">Raised</td><td>${fmtTime(n.raised_at)}</td></tr>
+        ${n.closed_at ? `<tr><td class="muted">Closed</td><td>${fmtTime(n.closed_at)} by ${esc(n.signed_off_name || '')}</td></tr>` : ''}
+      </table>
+      ${n.status !== 'Closed' ? `<div class="alert a-warn" style="margin-top:10px">This NCR blocks approval of ${n.wir_number ? esc(n.wir_number) : 'the linked WIR'} until closed.</div>` : ''}
+    </div>
+    <div class="card"><h3>Investigation & close-out</h3>
+      <div class="field"><label>Root cause</label><textarea id="nRoot" rows="2" ${n.status === 'Closed' ? 'disabled' : ''}>${esc(n.root_cause || '')}</textarea></div>
+      <div class="field"><label>Corrective action</label><textarea id="nAction" rows="2" ${n.status === 'Closed' ? 'disabled' : ''}>${esc(n.corrective_action || '')}</textarea></div>
+      <div class="field"><label>Close-out evidence <span class="muted small">(required to close — e.g. passing re-test TR)</span></label><textarea id="nEvidence" rows="2" ${n.status === 'Closed' ? 'disabled' : ''}>${esc(n.closeout_evidence || '')}</textarea></div>
+      ${n.status !== 'Closed' ? '<button class="btn btn-outline btn-sm" id="nSave">Save</button>' : '<p class="small muted">Closed — read only.</p>'}
+    </div>
+  </div>`;
+  const saveFields = () => api('PATCH', `/ncrs/${id}`, { root_cause: $('nRoot').value, corrective_action: $('nAction').value, closeout_evidence: $('nEvidence').value });
+  if ($('nSave')) $('nSave').addEventListener('click', async () => { await saveFields(); toast('Saved'); });
+  if ($('nReview')) $('nReview').addEventListener('click', async () => { await saveFields(); await api('PATCH', `/ncrs/${id}`, { status: 'Under Review' }); render(); });
+  if ($('nClose')) $('nClose').addEventListener('click', async () => {
+    try { await saveFields(); await api('PATCH', `/ncrs/${id}`, { status: 'Closed' }); toast(`${n.ncr_number} closed`); render(); }
+    catch (err) { toast(err.message, 'err'); }
+  });
+}
+
+/* ================= M02 drawings ================= */
+async function viewDrawings() {
+  setTitle('Shop Drawing Registry');
+  const q = sessionStorage.getItem('wf_draw_q') || '';
+  const d = await api('GET', `/drawings?project_id=${P()}${q ? '&q=' + encodeURIComponent(q) : ''}&latest=0`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Drawings (${d.drawings.length})</h2>
+    <div class="filters"><input id="dq" placeholder="Search number or title…" value="${esc(q)}">
+    <button class="btn btn-cta btn-sm" id="dUploadBtn">+ Upload Drawing</button></div></div>
+  <div id="dUploadForm" class="card" hidden style="margin-bottom:14px">
+    <h3>Upload drawing</h3>
+    <div class="frow">
+      <div class="field"><label>Drawing number</label><input id="uNum" placeholder="SD-STR-031"></div>
+      <div class="field"><label>Revision</label><input id="uRev" placeholder="Rev 0"></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>Title</label><input id="uTitle"></div>
+      <div class="field"><label>Discipline</label><select id="uDisc"><option>Structural</option><option>MEP</option><option>Civil</option><option>Architectural</option></select></div>
+    </div>
+    <div class="field"><label>PDF file</label><input type="file" id="uFile" accept=".pdf"></div>
+    <div class="alert a-blue small">Same drawing number → the new upload becomes Latest and previous revisions are marked Superseded automatically.</div>
+    <button class="btn btn-cta btn-sm" id="uSave">Save</button>
+  </div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>Number</th><th>Title</th><th>Discipline</th><th>Revision</th><th>Status</th><th>Used in WIRs</th></tr>
+    ${d.drawings.map((dr) => `<tr class="click" onclick="location.hash='#/drawing/${dr.id}'">
+      <td><b>${esc(dr.drawing_number)}</b></td><td>${esc(dr.title || '')}</td><td>${esc(dr.discipline)}</td><td>${esc(dr.revision)}</td>
+      <td>${dr.is_latest ? '<span class="badge b-green">Latest Rev</span>' : '<span class="badge b-gray">Superseded</span>'}</td>
+      <td>${dr.wir_count || 0}</td></tr>`).join('')}
+  </table></div>`;
+  let t;
+  $('dq').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { sessionStorage.setItem('wf_draw_q', e.target.value); render(); }, 350); });
+  $('dUploadBtn').addEventListener('click', () => { $('dUploadForm').hidden = !$('dUploadForm').hidden; });
+  $('uSave').addEventListener('click', async () => {
+    try {
+      let file_url = null;
+      if ($('uFile').files[0]) file_url = (await uploadFile($('uFile').files[0])).url;
+      await api('POST', '/drawings', { project_id: P(), drawing_number: $('uNum').value, revision: $('uRev').value || 'Rev 0', title: $('uTitle').value, discipline: $('uDisc').value, file_url });
+      toast('Drawing saved'); render();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+}
+async function viewDrawingDetail(id) {
+  const d = await api('GET', `/drawings/${id}`);
+  setTitle(d.drawing.drawing_number);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(d.drawing.drawing_number)} <span class="muted" style="font-size:.85em">${esc(d.drawing.title || '')}</span></h2>
+    ${d.drawing.file_url ? `<a class="btn btn-outline btn-sm" href="${esc(d.drawing.file_url)}" target="_blank">Open PDF ↗</a>` : ''}</div>
+  <div class="grid cols-2">
+    <div class="card"><h3>Revision history</h3><table class="tbl"><tr><th>Revision</th><th>Uploaded</th><th>Status</th></tr>
+      ${d.revisions.map((r) => `<tr><td>${esc(r.revision)}</td><td>${fmtDate(r.created_at)}</td><td>${r.is_latest ? '<span class="badge b-green">Latest</span>' : '<span class="badge b-gray">Superseded</span>'}</td></tr>`).join('')}</table></div>
+    <div class="card"><h3>Referenced by WIRs</h3>
+      ${d.wirs.map((w) => `<div style="padding:4px 0"><a href="#/wir/${w.id}"><b>${esc(w.wir_number)}</b></a> ${badge(w.status)}</div>`).join('') || '<p class="muted">Not referenced yet.</p>'}</div>
+  </div>`;
+}
+
+/* ================= M13 zones ================= */
+async function viewZones() {
+  setTitle('Zones');
+  const d = await api('GET', `/zones?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Zones (${d.zones.length})</h2>${canQA() ? '<button class="btn btn-cta btn-sm" id="zNew">+ New Zone</button>' : ''}</div>
+  <div class="grid cols-3">
+    ${d.zones.map((z) => `<div class="card click" style="cursor:pointer" onclick="location.hash='#/zone/${z.id}'">
+      <h3>${esc(z.name)}</h3>
+      <p class="small muted">Grid ${esc(z.grid_ref || '—')}</p>
+      <p class="small">${z.drawing_count} drawings mapped · ${z.wir_count} WIRs</p>
+    </div>`).join('')}
+  </div>`;
+  if ($('zNew')) $('zNew').addEventListener('click', async () => {
+    const name = prompt('Zone name (e.g. Z05 - Level 2):');
+    if (!name) return;
+    const grid_ref = prompt('Grid reference (optional):') || null;
+    await api('POST', '/zones', { project_id: P(), name, grid_ref });
+    render();
+  });
+}
+async function viewZoneDetail(id) {
+  const [d, all] = await Promise.all([api('GET', `/zones/${id}`), api('GET', `/drawings?project_id=${P()}`)]);
+  setTitle(d.zone.name);
+  const mapped = new Set(d.drawings.map((x) => x.drawing_number));
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(d.zone.name)}</h2></div>
+  <div class="grid cols-2">
+    <div class="card"><h3>Mapped drawings <span class="muted small">(auto-suggested in WIR form)</span></h3>
+      <div class="chips">${all.drawings.map((dr) => `<span class="chip zmap ${mapped.has(dr.drawing_number) ? 'on' : ''}" data-id="${dr.id}">${esc(dr.drawing_number)} ${esc(dr.revision)}</span>`).join('')}</div>
+      ${canQA() || S.user.role === 'Engineer' ? '<button class="btn btn-navy btn-sm" id="zSave" style="margin-top:12px">Save Mapping</button>' : ''}
+    </div>
+    <div class="card"><h3>FDT coverage in this zone</h3>
+      <table class="tbl"><tr><th>Layer</th><th>Area</th><th>Req</th><th>Done</th><th>Status</th></tr>
+      ${(d.fdt || []).map((s) => `<tr><td>${s.layer_no}</td><td>${s.area_m2}</td><td>${s.required}</td><td>${s.done}</td><td>${s.deficient ? '<span class="badge b-red">Deficient</span>' : '<span class="badge b-green">OK</span>'}</td></tr>`).join('') || '<tr><td colspan="5" class="muted">No FDT logs.</td></tr>'}</table>
+    </div>
+  </div>`;
+  document.querySelectorAll('.zmap').forEach((c) => c.addEventListener('click', () => c.classList.toggle('on')));
+  if ($('zSave')) $('zSave').addEventListener('click', async () => {
+    const ids = [...document.querySelectorAll('.zmap.on')].map((c) => c.dataset.id);
+    await api('POST', `/zones/${id}/drawings`, { drawing_ids: ids });
+    toast('Zone mapping saved'); render();
+  });
+}
+
+/* ================= M14 programme ================= */
+async function viewProgramme() {
+  setTitle('Master Programme');
+  const [d, zones] = await Promise.all([api('GET', `/programme?project_id=${P()}`), api('GET', `/zones?project_id=${P()}`)]);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Programme activities (${d.activities.length})</h2>
+    <div><button class="btn btn-outline btn-sm" id="aImportBtn">Import rows</button> <button class="btn btn-cta btn-sm" id="aNewBtn">+ Activity</button></div></div>
+  <div id="aForm" class="card" hidden style="margin-bottom:14px"><h3>Add activity</h3>
+    <div class="frow">
+      <div class="field"><label>Zone</label><select id="aZone">${zones.zones.map((z) => `<option value="${z.id}">${esc(z.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Type</label><select id="aType">${d.activity_types.map((t) => `<option>${t}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>Activity name</label><input id="aName"></div>
+    <div class="frow">
+      <div class="field"><label>Planned start</label><input type="date" id="aStart"></div>
+      <div class="field"><label>Planned end</label><input type="date" id="aEnd"></div>
+    </div>
+    <button class="btn btn-cta btn-sm" id="aSave">Add</button>
+  </div>
+  <div id="aImport" class="card" hidden style="margin-bottom:14px"><h3>Bulk import</h3>
+    <p class="small muted">One row per line: <code>Zone name | Activity | Type | Start | End</code> (dates YYYY-MM-DD)</p>
+    <textarea id="aRows" rows="5" style="width:100%" placeholder="Z03 | L1 slab formwork | Formwork | 2026-07-20 | 2026-07-24"></textarea>
+    <button class="btn btn-cta btn-sm" id="aImportSave" style="margin-top:8px">Import</button>
+  </div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>Zone</th><th>Activity</th><th>Type</th><th>Planned start</th><th>Planned end</th><th>WIR</th><th>Flag</th></tr>
+    ${d.activities.map((a) => `<tr>
+      <td>${esc(a.zone_name)}</td><td>${esc(a.name)}</td><td>${esc(a.type)}</td>
+      <td>${fmtDate(a.planned_start)}</td><td>${fmtDate(a.planned_end)}</td>
+      <td>${a.wir_number ? `${esc(a.wir_number)} ${badge(a.wir_status)}` : '<span class="badge b-gray">Not Raised</span>'}</td>
+      <td>${a.flag ? `<span class="badge ${a.flag === 'WIR Overdue' ? 'b-red' : 'b-amber'}">${a.flag}</span>` : ''}</td></tr>`).join('')}
+  </table></div>`;
+  $('aNewBtn').addEventListener('click', () => { $('aForm').hidden = !$('aForm').hidden; });
+  $('aImportBtn').addEventListener('click', () => { $('aImport').hidden = !$('aImport').hidden; });
+  $('aSave').addEventListener('click', async () => {
+    await api('POST', '/activities', { project_id: P(), zone_id: $('aZone').value, name: $('aName').value, type: $('aType').value, planned_start: $('aStart').value || null, planned_end: $('aEnd').value || null });
+    toast('Activity added'); render();
+  });
+  $('aImportSave').addEventListener('click', async () => {
+    const rows = $('aRows').value.split('\n').map((l) => l.split('|').map((x) => x.trim())).filter((r) => r.length >= 2)
+      .map(([zone, activity, type, start, end]) => ({ zone, activity, type, start, end }));
+    const d2 = await api('POST', '/activities/import', { project_id: P(), rows });
+    toast(`Imported ${d2.imported} activities`); render();
+  });
+}
+
+/* ================= M10 method statements ================= */
+async function viewMs() {
+  setTitle('Method Statements');
+  const d = await api('GET', `/method-statements?project_id=${P()}`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>Method Statements (${d.method_statements.length})</h2><button class="btn btn-cta btn-sm" id="msNew">+ Upload MS</button></div>
+  <div id="msForm" class="card" hidden style="margin-bottom:14px"><h3>New Method Statement</h3>
+    <div class="frow">
+      <div class="field"><label>Title</label><input id="mTitle"></div>
+      <div class="field"><label>Activity type</label><select id="mType">${['Rebar', 'Formwork', 'Concrete Pour', 'MEP Rough-in', 'Backfill', 'Finishes'].map((t) => `<option>${t}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label>PDF</label><input type="file" id="mFile" accept=".pdf"></div>
+    <button class="btn btn-cta btn-sm" id="mSave">Save</button>
+  </div>
+  <div class="card" style="padding:0;overflow-x:auto"><table class="tbl">
+    <tr><th>MS #</th><th>Title</th><th>Activity type</th><th>Status</th><th>Approved</th><th>WIRs</th>${canQA() ? '<th></th>' : ''}</tr>
+    ${d.method_statements.map((m) => `<tr>
+      <td><b>${esc(m.ms_number)}</b></td><td>${m.file_url ? `<a href="${esc(m.file_url)}" target="_blank">${esc(m.title)} ↗</a>` : esc(m.title)}</td>
+      <td>${esc(m.activity_type)}</td><td>${badge(m.status)}</td><td>${fmtDate(m.approved_date)}</td><td>${m.wir_count}</td>
+      ${canQA() ? `<td style="white-space:nowrap">${m.status !== 'Approved' ? `<button class="btn btn-cta btn-sm msact" data-id="${m.id}" data-s="Approved">Approve</button>` : ''}
+        ${m.status !== 'Rejected' ? `<button class="btn btn-outline btn-sm msact" data-id="${m.id}" data-s="Rejected">Reject</button>` : ''}</td>` : ''}</tr>`).join('')}
+  </table></div>
+  <div class="alert a-blue" style="margin-top:12px">WIR submission is blocked for an activity type without an <b>Approved</b> Method Statement (M10 gate).</div>`;
+  $('msNew').addEventListener('click', () => { $('msForm').hidden = !$('msForm').hidden; });
+  $('mSave').addEventListener('click', async () => {
+    let file_url = null;
+    if ($('mFile').files[0]) file_url = (await uploadFile($('mFile').files[0])).url;
+    await api('POST', '/method-statements', { project_id: P(), title: $('mTitle').value, activity_type: $('mType').value, file_url });
+    toast('Method statement saved'); render();
+  });
+  document.querySelectorAll('.msact').forEach((b) => b.addEventListener('click', async () => {
+    await api('PATCH', `/method-statements/${b.dataset.id}`, { status: b.dataset.s });
+    toast('MS ' + b.dataset.s.toLowerCase()); render();
+  }));
+}
+
+/* ================= M12 handover ================= */
+async function viewHandover() {
+  setTitle('Handover Pack Builder');
+  const zones = (await api('GET', `/zones?project_id=${P()}`)).zones;
+  $('view').innerHTML = `
+  <div class="card" style="max-width:760px">
+    <h3>Step 1 — Scope</h3>
+    <div class="frow">
+      <div class="field"><label>Zone</label><select id="hZone"><option value="">All zones</option>${zones.map((z) => `<option value="${z.id}">${esc(z.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>WIR filter</label><select id="hApproved"><option value="1">Approved WIRs only</option><option value="0">All WIRs</option></select></div>
+    </div>
+    <div class="frow">
+      <div class="field"><label>From date</label><input type="date" id="hFrom"></div>
+      <div class="field"><label>To date</label><input type="date" id="hTo"></div>
+    </div>
+    <button class="btn btn-navy btn-sm" id="hPreview">Preview index</button>
+    <div id="hIndex" style="margin-top:14px"></div>
+    <div id="hGen" hidden style="margin-top:14px">
+      <h3>Step 3 — Generate</h3>
+      <button class="btn btn-cta" id="hGenerate">⬇ Generate Pack</button>
+      <div id="hResult" style="margin-top:10px"></div>
+    </div>
+  </div>`;
+  const filters = () => ({ zone_id: $('hZone').value || undefined, approved_only: $('hApproved').value === '1', from: $('hFrom').value || undefined, to: $('hTo').value || undefined });
+  $('hPreview').addEventListener('click', async () => {
+    const f = filters();
+    const qs = new URLSearchParams({ project_id: P(), ...(f.zone_id ? { zone_id: f.zone_id } : {}), approved_only: f.approved_only ? '1' : '0', ...(f.from ? { from: f.from } : {}), ...(f.to ? { to: f.to } : {}) });
+    const d = await api('GET', `/handover/preview?${qs}`);
+    $('hIndex').innerHTML = `<h3>Step 2 — Index preview</h3>` + d.sections.map((s) => `
+      <div style="margin:10px 0"><b>${esc(s.title)} (${s.count})</b>
+        <div class="small muted" style="max-height:130px;overflow-y:auto;margin-top:4px">${s.items.map((i) => esc(i)).join('<br>') || 'none'}</div></div>`).join('');
+    $('hGen').hidden = false;
+  });
+  $('hGenerate').addEventListener('click', async () => {
+    $('hResult').innerHTML = '<span class="muted">Compiling…</span>';
+    const d = await api('POST', '/handover/generate', { project_id: P(), filters: filters() });
+    $('hResult').innerHTML = `<div class="alert a-green">Pack generated — ${d.counts.wirs} WIRs, ${d.counts.results} results, ${d.counts.ncrs} NCRs, ${d.counts.ms} MS.<br>
+      <a href="${esc(d.url)}" target="_blank"><b>Open handover pack ↗</b></a> <span class="small muted">(print → save as PDF)</span></div>`;
+  });
+}
+
+/* ================= M01 team ================= */
+async function viewTeam() {
+  setTitle('Team');
+  const d = await api('GET', `/projects/${P()}/team`);
+  $('view').innerHTML = `
+  <div class="pagehead"><h2>${esc(S.project.name)} — team (${d.members.length})</h2></div>
+  <div class="grid cols-2">
+    <div class="card" style="padding:0"><table class="tbl">
+      <tr><th>Name</th><th>Email</th><th>Role</th></tr>
+      ${d.members.map((m) => `<tr><td>${esc(m.name)}</td><td>${esc(m.email)}</td><td>${badge(m.project_role)}</td></tr>`).join('')}
+    </table></div>
+    ${canQA() ? `<div class="card"><h3>Invite member</h3>
+      <div class="field"><label>Email</label><input id="iEmail" type="email"></div>
+      <div class="field"><label>Name</label><input id="iName"></div>
+      <div class="field"><label>Role</label><select id="iRole"><option>Engineer</option><option>QA</option><option>DocControl</option><option>Admin</option></select></div>
+      <button class="btn btn-cta btn-sm" id="iSave">Invite</button>
+      <p class="small muted" style="margin-top:8px">New users get password <code>changeme123</code>.</p>
+    </div>` : ''}
+  </div>`;
+  if ($('iSave')) $('iSave').addEventListener('click', async () => {
+    try {
+      await api('POST', `/projects/${P()}/team`, { email: $('iEmail').value, name: $('iName').value, role: $('iRole').value });
+      toast('Member invited'); render();
+    } catch (err) { toast(err.message, 'err'); }
+  });
+}
+
+/* ================= boot ================= */
+if (S.token && S.user) showApp().catch(() => logout());
+else showLogin();
+</script>
