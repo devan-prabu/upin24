@@ -13,6 +13,8 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const appApi = require('./api');
+const { UPLOAD_DIR } = require('./db');
 
 /* ---------------- config ---------------- */
 const PORT = Number(process.env.PORT || 3000);
@@ -221,6 +223,17 @@ function handleHealth(res) {
 function serveStatic(req, res) {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
   if (urlPath === '/') urlPath = '/index.html';
+  if (urlPath === '/app' || urlPath === '/app/') urlPath = '/app/index.html';
+  // Uploaded files (drawings, lab reports, generated handover packs)
+  if (urlPath.startsWith('/uploads/')) {
+    const up = path.normalize(path.join(UPLOAD_DIR, urlPath.slice('/uploads/'.length)));
+    if (!up.startsWith(UPLOAD_DIR + path.sep)) { res.writeHead(403); return res.end('Forbidden'); }
+    return fs.readFile(up, (err, data) => {
+      if (err) { res.writeHead(404); return res.end('Not found'); }
+      res.writeHead(200, { 'Content-Type': MIME[path.extname(up).toLowerCase()] || 'application/octet-stream' });
+      res.end(data);
+    });
+  }
   const filePath = path.normalize(path.join(ROOT, urlPath));
   if (!filePath.startsWith(ROOT + path.sep) && filePath !== ROOT) {
     res.writeHead(403);
@@ -249,6 +262,7 @@ const server = http.createServer((req, res) => {
   const route = req.url.split('?')[0];
   if (route === '/api/health' && req.method === 'GET') return handleHealth(res);
   if (route === '/api/parse' && req.method === 'POST') return void handleParse(req, res);
+  if (route.startsWith('/api/app/')) return void appApi.handle(req, res);
   if (req.method === 'GET') return serveStatic(req, res);
   res.writeHead(405);
   res.end('Method not allowed');

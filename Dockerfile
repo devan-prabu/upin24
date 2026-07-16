@@ -3,7 +3,13 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Zero-dependency server — no npm install needed
-COPY package.json server.js index.html tool.html ./
+COPY package.json server.js api.js db.js index.html tool.html ./
+COPY app ./app
+
+# SQLite database + uploads live in /app/data — mount a volume to persist
+ENV DATA_DIR=/app/data
+RUN mkdir -p /app/data && chown node /app/data
+VOLUME /app/data
 
 ENV PORT=3000
 EXPOSE 3000

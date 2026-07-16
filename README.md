@@ -1,10 +1,37 @@
 # WIRflow
 
-Fill your Excel submittals in plain English — a preparation-side assistant for construction site engineers.
+Construction QA automation for site engineers — WIRs, lab tests, NCRs, matrices, and handover packs, per the WIR System Blueprint (15 modules, 13+ DB tables).
 
+- **`app/`** — the full WIR Automation System (SPA, served at `/app/`)
+- **`api.js` + `db.js`** — REST API with all module business rules; SQLite via `node:sqlite` (still zero npm dependencies)
 - **`index.html`** — landing page
-- **`tool.html`** — the template tool: upload an `.xlsx` template containing `{{field}}` markers, describe what changed, download a filled, correctly-named copy. Formatting (logos, merged cells, borders, formulas) is never touched.
-- **`server.js`** — optional zero-dependency backend that adds **AI Smart Parse** (free-form notes → form fields) via any LLM provider you choose.
+- **`tool.html`** — the Excel template tool: upload an `.xlsx` template containing `{{field}}` markers, describe what changed, download a filled, correctly-named copy
+- **`server.js`** — zero-dependency server: static site + app API + optional **AI Smart Parse** via any LLM provider
+
+## The App (blueprint modules M01–M15)
+
+Run `npm start` and open `http://localhost:3000/app/`. Demo logins (password `demo123`):
+`engineer@wirflow.app` · `qa@wirflow.app` · `admin@wirflow.app` · `doc@wirflow.app` — seeded with a demo project (Marina Heights Tower).
+
+| Module | Where | Highlights |
+|---|---|---|
+| M01 Auth & Project Hub | Login, project selector, Team | Roles: Engineer / QA / DocControl / Admin |
+| M02 Shop Drawing Registry | Drawings | Upload PDF; same number → new rev, old auto-superseded |
+| M03 WIR Form Engine | + New WIR | Auto WIR#, zone→drawing auto-suggest, checklist, TR auto-spawn |
+| M04 WIR Status Tracker | WIRs | Draft→Submitted→Under Review→Approved/Rejected; approval blocked by pending/failed TRs, open NCRs, FDT deficits |
+| M05 Test Request Generator | Test Requests | Auto TR#; concrete cubes get 7/28-day due dates |
+| M06 Lab Results Desk | Results Desk | Built-in spec table (C25/C30/C40, FDT 95% MDD, steel 500MPa, slump ±25mm); instant PASS/FAIL; **FAIL auto-raises NCR** |
+| M07 FDT Logger | FDT Tracker | Required = ⌈area/250m²⌉ per layer; deficits block Backfill WIR approval |
+| M08 IR Matrix | IR Matrix | Zone × Activity grid, status chips, progress per zone |
+| M09 Lab Test Matrix | Lab Matrix | WIR × test-type heat map with pass-rate summary |
+| M10 Method Statements | Method Statements | Approval gate: no approved MS → WIR submission blocked |
+| M11 Notification Engine | 🔔 bell | WIR submitted/approved, test failed, TR due/overdue, NCR raised, programme lookahead |
+| M12 Handover Pack Builder | Handover Pack | Scope filters → indexed printable pack (cover, TOC, 4 sections) |
+| M13 Zone Mapper | Zones | Zone↔drawing mapping feeds the WIR form |
+| M14 Master Programme | Programme | Activities + planned dates; "WIR Due Soon/Overdue" flags |
+| M15 NCR Module | NCRs | Auto-raised on test failure; close requires evidence + QA sign-off; closed NCR + passing retest unblocks approval |
+
+Data lives in `data/wirflow.db` (SQLite) + `data/uploads/` — set `DATA_DIR` to relocate. Delete the folder to reset to seed data.
 
 ## Running without a backend
 
